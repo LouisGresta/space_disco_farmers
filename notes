@@ -18,3 +18,50 @@ on ne scan pas les planetes ennemies => déduire les placements initial au débu
 
 
 
+---------------------------------------------------------------
+Stratégie :
+
+Collecteur => ligne droite vers la planete la + proche en faisant en sorte que les collecteurs n'aillent pas à la meme planete
+
+Radar => 1 offensif avec escadron d'attaque
+=> 1 defensif avec escadron de defense
+
+Attaquants => 3 offensifs, 2 défensif 
+offensifs => reste groupés afin de bien nettoyer
+défensif => les 2 défende le meme collecteur, afin de mieux sécuriser => s'il meurt ils vont protéger l'autre
+
+
+---------------------------------------------------------------
+Fonctions obligatoires :
+
+##CALCUL
+
+-Au démarrage, scan pour avoir les positions de nos vaisseaux, base et planètes
+
+-Fonction pour déterminer l'angle d'un trajet
+
+-Fonction pour déterminer quel collecteur s'occupe de quelle planète
+
+-Décision de quels tireurs défendent et quel vaisseau ils défendent 
+
+-Quand collecteur escorté meurt, défense change de focus
+
+##COMPORTEMENT
+
+
+-Retour à la base quand détruit 
+
+-comportement des radars
+
+-Collecteur tout droit sur planète attitré 
+
+-comportement des defenseurs 
+
+-comportement des attaquants
+
+
+------------------------------------------------------------------
+Priorisation des taches :
+
+
+
