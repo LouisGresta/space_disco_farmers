@@ -23,7 +23,7 @@ void Tache1(void *argument)
 {
     while (1)
     {
-        puts("Tache 1 en cours");
+        puts("Tache 1 en cours\n");
         osDelay(1500); // tache toute les 1,5 secondes
     }
 }
