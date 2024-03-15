@@ -38,7 +38,7 @@ int main(void)
     const osThreadAttr_t defaultTask_attributes = {
         .name = "defaultTask",
         .priority = (osPriority_t)osPriorityNormal,
-        .stack_size = 128,
+        .stack_size = 2048,
     };
     defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
@@ -51,7 +51,7 @@ int main(void)
     const osThreadAttr_t Task1_attributes = {
         .name = "Task1",
         .priority = (osPriority_t)osPriorityNormal1,
-        .stack_size = 128,
+        .stack_size = 2048,
     };
     Task1ID = osThreadNew(Tache1, NULL, &Task1_attributes);
 
