@@ -29,25 +29,9 @@ enum RadarType
     SPACESHIP = 'S',
     BASE = 'B'
 };
-u_int16_t x_base = NULL;
-u_int16_t y_base = NULL;
-struct SpaceShip_t
-{
-    uint8_t team_id;
-    uint8_t ship_id;
-    uint16_t x;
-    uint16_t y;
-    bool broken;
-} typedef Ship;
 
-struct Planet_t
-{
-    uint16_t planet_id;
-    int8_t ship_id;
-    uint16_t x;
-    uint16_t y;
-    bool saved;
-} typedef Planet;
+u_int16_t x_base = 0;
+u_int16_t y_base = 0;
 
 
 

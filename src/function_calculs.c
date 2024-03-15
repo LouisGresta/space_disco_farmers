@@ -1,6 +1,9 @@
 #include <math.h>
-#include <stdio.h>
-#include "game_constants.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include "planet.h"
+#include "spaceship.h"
+
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
 #endif
@@ -35,9 +38,8 @@ float getTravelAngle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_
 // version actuelle => verif planete la plus proche du collecteur 1 et apres collecteur 2 donc c'est opti avec le cul
 // A UPDATE !
 
-uint16_t *determineTargetPlanets(Ship collector1, Ship collector2, Planet *planets, uint8_t nb_planets)
+void determineTargetPlanets(Ship collector1, Ship collector2, Planet *planets, uint8_t nb_planets, uint16_t results[2][2])
 {
-    uint16_t results[2][2];
     results[0][0] = collector1.ship_id;
     results[0][1] = -1; // Id de planète -1 indique que le vaisseau n'a pas encore de planète cible
     results[1][0] = collector2.ship_id;
@@ -78,6 +80,4 @@ uint16_t *determineTargetPlanets(Ship collector1, Ship collector2, Planet *plane
     // Affectation des planètes cibles aux vaisseaux
     results[0][1] = index_planet1 != -1 ? planets[index_planet1].planet_id : -1;
     results[1][1] = index_planet2 != -1 ? planets[index_planet2].planet_id : -1;
-
-    return results;
 }

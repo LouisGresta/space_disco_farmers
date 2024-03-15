@@ -19,11 +19,9 @@ MU_TEST(test_radar_command) {
 }
 
 MU_TEST(test_split) {
-    char** tokens = split("Theo,Louis,Pachelle Carelle", ',');
-    // get lenght of tokens
-    uint8_t i = 0;
-    while (tokens[i] != NULL) i++;
-    mu_assert_int_eq(3, i);
+    uint16_t count;
+    char** tokens = split("Theo,Louis,Pachelle Carelle", ',', &count);
+    mu_assert_int_eq(3, count);
     mu_assert_string_eq("Theo", tokens[0]);
     mu_assert_string_eq("Louis", tokens[1]);
     mu_assert_string_eq("Pachelle Carelle", tokens[2]);
