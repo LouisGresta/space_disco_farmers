@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include "functionCalculs.h"
+#include "..\src\functionCalculs.c"
 
 MU_TEST(test_calcul_angle)
 {

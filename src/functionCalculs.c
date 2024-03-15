@@ -1,4 +1,4 @@
-#include "functionCalculs.h"
+#include "..\include\functionCalculs.h"
 #include <stdlib.h>
 
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un point B(x,y)
@@ -11,8 +11,6 @@ float getTravelAngle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_
 
     float angle_rad = atan2(-dy, dx);
 
-    angle_rad -= (M_PI / 2);
-
     // Conversion de radians en degrés
     float angle_deg = angle_rad * (180.0 / M_PI);
 
@@ -22,7 +20,6 @@ float getTravelAngle(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_
 
     else if (angle_deg >= 360)
         angle_deg -= 360;
-
     return angle_deg;
 }
 
