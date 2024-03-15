@@ -10,7 +10,7 @@
 
 #define ATTACKERS { 1, 2, 3, 4, 5 }
 #define EXPLORERS { 6, 7 }
-#define COLLECTORS { 8, 9 } 
+#define COLLECTORS { 8, 9 }
 // Move
 #define COLLECTORS_MAX_SPEED 1000
 #define EXPLORERS_MAX_SPEED 2000
