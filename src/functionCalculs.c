@@ -1,12 +1,5 @@
-#include <math.h>
-#include <stdint.h>
+#include "functionCalculs.h"
 #include <stdlib.h>
-#include "planet.h"
-#include "spaceship.h"
-
-#ifndef M_PI
-#define M_PI (3.14159265358979323846)
-#endif
 
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un point B(x,y)
 
@@ -54,7 +47,7 @@ void determineTargetPlanets(Ship collector1, Ship collector2, Planet *planets, u
     for (uint8_t i = 0; i < nb_planets; i++)
     {
 
-        if (planets[i].saved == 0)
+        if (!planets[i].saved)
         {
             // distance avec collecteur 1
             uint16_t dist1 = round(sqrt(pow(abs(collector1.x - planets[i].x), 2) + pow(abs(collector1.y - planets[i].y), 2)));
