@@ -1,7 +1,7 @@
 #ifndef GAME_CONSTANTS_H
 #define GAME_CONSTANTS_H
 
-#include <stdio.h>
+#include <stdint.h>
 
 #define MIN_PLANET_ID 0
 #define MAX_PLANET_ID 65535

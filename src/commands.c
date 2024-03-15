@@ -13,17 +13,17 @@ static char buffer[MAX_COMMAND_SIZE];
 
 // Send commands to the server
 const char* move_command(uint8_t ship_id, uint16_t angle, uint16_t speed) {
-    sprintf(buffer, "MOVE %d %d %d", ship_id, angle, speed);
+    sprintf(buffer, "MOVE %d %d %d\n", ship_id, angle, speed);
     return buffer;
 }
 
 const char* fire_command(uint8_t ship_id, uint16_t angle) {
-    sprintf(buffer, "FIRE %d %d", ship_id, angle);
+    sprintf(buffer, "FIRE %d %d\n", ship_id, angle);
     return buffer;
 }
 
 const char* radar_command(uint8_t ship_id) {
-    sprintf(buffer, "RADAR %d", ship_id);
+    sprintf(buffer, "RADAR %d\n", ship_id);
     return buffer;
 }
 
