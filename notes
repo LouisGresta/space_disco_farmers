@@ -4,7 +4,7 @@ retourne OK si commande bonne, mais ne check pas si temps de recharge passé, vi
 
 exemple de format de retour radar si une planete et 1 vaisseau ennemie : P 1 100 200 -1 0,S 2 200 100 1
 
-Fire rate = 1 sec 
+Fire rate = 1 sec
 
 coordonnée (0,0) => en haut à gauche
 
@@ -16,7 +16,7 @@ Placement initial des vaisseaux fixe mais sans savoir quelle base on est
 
 les radars voient quoi qu'il arrive les vaisseaux alliées et les planetes alliés
 
-on ne scan pas les planetes ennemies => déduire les placements initial au début 
+on ne scan pas les planetes ennemies => déduire les placements initial au début
 
 
 
@@ -28,7 +28,7 @@ Collecteur => ligne droite vers la planete la + proche en faisant en sorte que l
 Radar => 1 offensif avec escadron d'attaque
 => 1 defensif avec escadron de defense
 
-Attaquants => 3 offensifs, 2 défensif 
+Attaquants => 3 offensifs, 2 défensif
 offensifs => reste groupés afin de bien nettoyer
 défensif => les 2 défende le meme collecteur, afin de mieux sécuriser => s'il meurt ils vont protéger l'autre
 
@@ -44,20 +44,20 @@ Fonctions obligatoires :
 
 -Fonction pour déterminer quel collecteur s'occupe de quelle planète
 
--Décision de quels tireurs défendent et quel vaisseau ils défendent 
+-Décision de quels tireurs défendent et quel vaisseau ils défendent
 
 -Quand collecteur escorté meurt, défense change de focus
 
 ##COMPORTEMENT
 
 
--Retour à la base quand détruit 
+-Retour à la base quand détruit
 
 -comportement des radars
 
--Collecteur tout droit sur planète attitré 
+-Collecteur tout droit sur planète attitré
 
--comportement des defenseurs 
+-comportement des defenseurs
 
 -comportement des attaquants
 
@@ -67,3 +67,17 @@ Priorisation des taches :
 
 
 
+------------------------------------------------------------------
+Notes Louis pour le rapport :
+
+1 - Partis sur des tests basiques avec minunit
+2 - Mise en place des pre-commit pour le formattage de code qui amène la réflexion de lancer automatiquement les tests dans le processus de commit/push
+3 - mise en place d'un makefile + script pour build tout les tests du répertoire 'test'
+4 - se renseigner sur les moyens d'automatiser proprement le lancement des tests en utilisant les GitHub Actions pour lancer les tests au push de commits et pouvoir visualiser l'exécution directement sur GitHub
+5 - découverte des workflows, dont un assez simple déjà écrit qui permet de lancer les tests via le framework platformio
+6 - choix de migrer nos tests et notre façon de faire avec minunit pour écrire nos tests avec 'unity' (framework de test intégré à platformio) pour pouvoir utiliser le workflow découvert
+7 - complications car il a fallu initialiser un environnement 'native' pour pouvoir run nos tests en local sur notre machine + fichiers unity_config pour les tests sur stm32
+8 - build de l'environnement 'native' en erreur à cause des imports FreeRTOS et stm32
+9 - mise en place d'inclusion/exclusion de fichiers pour build juste ce qu'il nous faut pour tester nos fichiers car nos fichiers sont rangés d'une manière qui plaît pas à platformio donc obligé de bidouyer (forcer le runner des tests à comiler les sources)
+10 - revue de l'arborescence des tests pour éviter des erreurs de compilation car 2 fichiers de tests dans le meme répertoire de test = 2 fonctions main en même temps pour le compilateur
+11 - implémentation workflow GitHub

@@ -27,7 +27,6 @@ const char *radar_command(uint8_t ship_id) {
   return buffer;
 }
 
-// Split a string uinto an array of strings using strtok
 char **split(const char *str, const char delimiter, uint16_t *count) {
   char delimiter_str[2];
   delimiter_str[0] = delimiter;

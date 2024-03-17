@@ -1,11 +1,11 @@
-#include "..\include\functionCalculs.h"
+#include "functionCalculs.h"
 #include <stdlib.h>
 
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un
 // point B(x,y)
 
-float getTravelAngle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
-                     uint16_t end_y) {
+float get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
+                       uint16_t end_y) {
 
   float dx = end_x - start_x;
   float dy = end_y - start_y;
@@ -29,8 +29,8 @@ float getTravelAngle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
 // planet2 ID] version actuelle => verif planete la plus proche du collecteur 1
 // et apres collecteur 2 donc c'est opti avec le cul A UPDATE !
 
-void determineTargetPlanets(Ship collector1, Ship collector2, Planet *planets,
-                            uint8_t nb_planets, uint16_t results[2][2]) {
+void determine_target_planets(Ship collector1, Ship collector2, Planet *planets,
+                              uint8_t nb_planets, uint16_t results[2][2]) {
   results[0][0] = collector1.ship_id;
   results[0][1] = -1; // Id de planète -1 indique que le vaisseau n'a pas encore
                       // de planète cible
