@@ -12,8 +12,6 @@ struct Planet_t {
   uint8_t saved;
 } typedef Planet;
 
-extern Planet planets[NB_MAX_PLANETS];
-
 void create_planet(uint16_t planet_id, uint16_t x, uint16_t y, uint16_t ship_id,
                    uint8_t saved, Planet *planets, uint16_t *nb_planets);
 void delete_planet(uint16_t planet_id, Planet *planets, uint16_t *nb_planets);

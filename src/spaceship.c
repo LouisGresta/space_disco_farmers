@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 void create_spaceship(uint8_t team_id, uint8_t ship_id, uint16_t x, uint16_t y,
-                      uint8_t broken, Ship *spaceships,
+                      uint8_t broken, Spaceship *spaceships,
                       uint16_t *nb_spaceships) {
-  Ship *new_spaceship = malloc(sizeof(Ship));
+  Spaceship *new_spaceship = malloc(sizeof(Spaceship));
   new_spaceship->team_id = team_id;
   new_spaceship->ship_id = ship_id;
   new_spaceship->x = x;
@@ -14,7 +14,7 @@ void create_spaceship(uint8_t team_id, uint8_t ship_id, uint16_t x, uint16_t y,
   (*nb_spaceships)++;
 }
 
-void delete_spaceship(uint8_t ship_id, Ship *spaceships,
+void delete_spaceship(uint8_t ship_id, Spaceship *spaceships,
                       uint16_t *nb_spaceships) {
   for (uint16_t i = 0; i < *nb_spaceships; i++) {
     if (spaceships[i].ship_id == ship_id) {
@@ -28,7 +28,8 @@ void delete_spaceship(uint8_t ship_id, Ship *spaceships,
   }
 }
 
-Ship *get_spaceship(uint8_t ship_id, Ship *spaceships, uint16_t nb_spaceships) {
+Spaceship *get_spaceship(uint8_t ship_id, Spaceship *spaceships,
+                         uint16_t nb_spaceships) {
   for (uint16_t i = 0; i < nb_spaceships; i++) {
     if (spaceships[i].ship_id == ship_id) {
       return &spaceships[i];

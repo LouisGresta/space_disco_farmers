@@ -1,6 +1,4 @@
 #include "gameConstants.h"
-#include "planet.h"
-#include "spaceship.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,14 +70,14 @@ void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
   planet->saved = saved;
 }
 
-void process_spaceship(char **params, Ship *spaceships,
+void process_spaceship(char **params, Spaceship *spaceships,
                        uint16_t *nb_spaceships) {
   uint8_t team_id = atoi(params[1]);
   uint8_t ship_id = atoi(params[2]);
   uint16_t x = atoi(params[3]);
   uint16_t y = atoi(params[4]);
   uint8_t broken = atoi(params[5]);
-  Ship *spaceship = get_spaceship(ship_id, spaceships, *nb_spaceships);
+  Spaceship *spaceship = get_spaceship(ship_id, spaceships, *nb_spaceships);
   if (spaceship == NULL) {
     // If the spaceship does not exist, create it
     create_spaceship(team_id, ship_id, x, y, broken, spaceships, nb_spaceships);
@@ -92,7 +90,7 @@ void process_spaceship(char **params, Ship *spaceships,
 
 // Parse responses from the server
 int parse_radar_response(const char *response, Planet *planets,
-                         Ship *spaceships, uint16_t *nb_planets,
+                         uint16_t *nb_planets, Spaceship *spaceships,
                          uint16_t *nb_spaceships, uint16_t *x_base,
                          uint16_t *y_base) {
   uint16_t count;
