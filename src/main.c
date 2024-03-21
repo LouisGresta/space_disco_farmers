@@ -3,11 +3,29 @@
 #define M_PI (3.14159265358979323846)
 #endif
 #include "cmsis_os.h"
+#include "functionCalculs.h"
 #include "main.h"
+#include "planet.h"
+#include "spaceship.h"
 
 osThreadId_t defaultTaskHandle;
 osThreadId_t Task1ID;
 
+uint16_t base_x, base_y;
+uint16_t collector_focus[2][2];
+
+////////////////////////////////////////
+//           fonctions               //
+//////////////////////////////////////
+
+// fonction à call quand vaisseau détruit ou possède une planète
+void retour_base(Spaceship ship) {
+
+  float angle = get_travel_angle(ship.x, ship.y, base_x, base_y);
+  // move_v_max(ship.id, angle);
+}
+
+// thread
 void StartDefaultTask(void *argument);
 
 void StartDefaultTask(void *argument) {
