@@ -1,10 +1,9 @@
-#include "gameConstants.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "gameConstants.h"
 #include "commands.h"
-#include "functionCalculs.h"
 
 #define MAX_COMMAND_SIZE 100
 
@@ -16,17 +15,17 @@ void move_v_max(Spaceship ship, uint16_t angle)
 }*/
 
 // print commands
-const char *move_str(uint8_t ship_id, uint16_t angle, uint16_t speed) {
+char *move_str(int8_t ship_id, uint16_t angle, uint16_t speed) {
   sprintf(buffer, "MOVE %d %d %d\n", ship_id, angle, speed);
   return buffer;
 }
 
-const char *fire_str(uint8_t ship_id, uint16_t angle) {
+char *fire_str(int8_t ship_id, uint16_t angle) {
   sprintf(buffer, "FIRE %d %d\n", ship_id, angle);
   return buffer;
 }
 
-const char *radar_str(uint8_t ship_id) {
+char *radar_str(int8_t ship_id) {
   sprintf(buffer, "RADAR %d\n", ship_id);
   return buffer;
 }

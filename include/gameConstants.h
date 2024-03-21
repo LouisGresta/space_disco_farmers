@@ -8,12 +8,14 @@
 
 #define AREA_LENGTH 20000
 
-#define ATTACKERS                                                              \
-  { 1, 2, 3, 4, 5 }
-#define EXPLORERS                                                              \
-  { 6, 7 }
-#define COLLECTORS                                                             \
-  { 8, 9 }
+// Read-only
+#define ATTACKERS_SIZE 5
+#define EXPLORERS_SIZE 2
+#define COLLECTORS_SIZE 2
+extern int8_t ATTACKERS[ATTACKERS_SIZE];
+extern int8_t EXPLORERS[EXPLORERS_SIZE];
+extern int8_t COLLECTORS[COLLECTORS_SIZE];
+
 // Move
 #define COLLECTORS_MAX_SPEED 1000
 #define EXPLORERS_MAX_SPEED 2000

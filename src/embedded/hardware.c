@@ -36,10 +36,8 @@ int putchar(int c) {
 }
 
 int puts(char *text) {
-  unsigned short int lenght = 1; // 1 pour compter le '\0'
   while (*text != '\0')
-    lenght++;
-  HAL_UART_Transmit(&huart2, (uint8_t *)text, lenght, HAL_MAX_DELAY);
+    putchar(*text++);
   return 0;
 }
 

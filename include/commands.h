@@ -5,11 +5,11 @@
 #include "spaceship.h"
 #include <stdint.h>
 
-void move_v_max(Spaceship ship, uint16_t angle);
+#define MAX_RESPONSE_SIZE 1024
 
-const char *move_command(uint8_t ship_id, uint16_t angle, uint16_t speed);
-const char *fire_command(uint8_t ship_id, uint16_t angle);
-const char *radar_command(uint8_t ship_id);
+char *move_str(int8_t ship_id, uint16_t angle, uint16_t speed);
+char *fire_str(int8_t ship_id, uint16_t angle);
+char *radar_str(int8_t ship_id);
 
 char **split(const char *str, const char delimiter, uint16_t *count);
 int parse_radar_response(const char *response, Planet *planets,
