@@ -1,4 +1,5 @@
 #include "functionCalculs.h"
+#include "gameConstants.h"
 #include <stdlib.h>
 
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un
@@ -33,16 +34,13 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
                               Planet *planets, uint8_t nb_planets,
                               uint16_t results[2][2]) {
   results[0][0] = collector1.ship_id;
-  results[0][1] = -1; // Id de planète -1 indique que le vaisseau n'a pas encore
-                      // de planète cible
   results[1][0] = collector2.ship_id;
-  results[1][1] = -1;
 
   // Variables pour stocker les distances minimales et les indices des planètes
-  uint16_t min_distance1 = -1;
-  uint16_t min_distance2 = -1;
-  uint8_t index_planet1 = -1;
-  uint8_t index_planet2 = -1;
+  uint16_t min_distance1 = AREA_LENGTH;
+  uint16_t min_distance2 = AREA_LENGTH;
+  uint8_t index_planet1;
+  uint8_t index_planet2;
 
   for (uint8_t i = 0; i < nb_planets; i++) {
 
@@ -55,15 +53,14 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
                                   pow(abs(collector2.y - planets[i].y), 2)));
 
       // vérifier si la planète est la + proche de collector1
-      if (min_distance1 == -1 || dist1 < min_distance1) {
+      if (dist1 < min_distance1) {
         min_distance1 = dist1;
         index_planet1 = i;
       }
 
       // vérifier si la planète est la + proche de collector2 sans avoir same
       // focus que collector1
-      if (min_distance2 == -1 ||
-          (dist2 < min_distance2 && i != index_planet1)) {
+      if (dist2 < min_distance2 && i != index_planet1) {
         min_distance2 = dist2;
         index_planet2 = i;
       }
@@ -71,6 +68,6 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   }
 
   // Affectation des planètes cibles aux vaisseaux
-  results[0][1] = index_planet1 != -1 ? planets[index_planet1].planet_id : -1;
-  results[1][1] = index_planet2 != -1 ? planets[index_planet2].planet_id : -1;
+  results[0][1] = planets[index_planet1].planet_id;
+  results[1][1] = planets[index_planet2].planet_id;
 }

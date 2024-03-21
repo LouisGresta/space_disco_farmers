@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unity.h>
 
-void build_planet_response(char *result, uint16_t planet_id, u_int16_t x,
+void build_planet_response(char *result, uint16_t planet_id, uint16_t x,
                            uint16_t y, uint16_t ship_id, uint8_t saved);
 void build_spaceship_response(char *result, uint8_t team_id, uint8_t ship_id,
                               uint16_t x, uint16_t y, uint8_t broken);
@@ -98,7 +98,7 @@ void build_radar_response(char *result) {
   strcat(result, "\n");
 }
 
-void build_planet_response(char *result, uint16_t planet_id, u_int16_t x,
+void build_planet_response(char *result, uint16_t planet_id, uint16_t x,
                            uint16_t y, uint16_t ship_id, uint8_t saved) {
   sprintf(result, "P %d %d %d %d %d", planet_id, x, y, ship_id, saved);
 }

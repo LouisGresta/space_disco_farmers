@@ -28,7 +28,4 @@
 #define RADAR_RANGE 5000
 enum RadarType { PLANET = 'P', SPACESHIP = 'S', BASE = 'B' };
 
-uint16_t x_base = 0;
-uint16_t y_base = 0;
-
 #endif // GAME_CONSTANTS_H
