@@ -10,9 +10,9 @@ void tearDown(void) {
 }
 
 void test_get_travel_angle(void) {
-  TEST_ASSERT_EQUAL(90, get_travel_angle(15, 10, 15, 5));
-  TEST_ASSERT_EQUAL(315, get_travel_angle(25, 13, 27, 15));
-  TEST_ASSERT_EQUAL(135, get_travel_angle(100, 80, 80, 60));
+  TEST_ASSERT_EQUAL(45, get_travel_angle(10, 10, 20, 20));
+  TEST_ASSERT_EQUAL(225, get_travel_angle(50, 50, 40, 40));
+  TEST_ASSERT_EQUAL(90, get_travel_angle(100, 100, 100, 160));
 }
 
 void test_determine_target_planets(void) {

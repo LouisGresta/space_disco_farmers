@@ -5,13 +5,13 @@
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un
 // point B(x,y)
 
-float get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
-                       uint16_t end_y) {
+uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
+                          uint16_t end_y) {
 
   float dx = end_x - start_x;
   float dy = end_y - start_y;
 
-  float angle_rad = atan2(-dy, dx);
+  float angle_rad = atan2(dy, dx);
 
   // Conversion de radians en degrés
   float angle_deg = angle_rad * (180.0 / M_PI);
@@ -22,7 +22,11 @@ float get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
 
   else if (angle_deg >= 360)
     angle_deg -= 360;
-  return angle_deg;
+
+  // Conversion de l'angle en entier non signé de 16 bits
+  uint16_t angle_deg_uint16 = (uint16_t)angle_deg;
+
+  return angle_deg_uint16;
 }
 
 // fonction qui calcule quel collecteur doit viser quelle planète
@@ -71,3 +75,35 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   results[0][1] = planets[index_planet1].planet_id;
   results[1][1] = planets[index_planet2].planet_id;
 }
+
+/*
+
+uint8_t is_in_set(const int *set, int size, int value) {
+    for (int i = 0; i < size; i++) {
+        if (set[i] == value) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+uint8_t is_attackers(int value) {
+    static const int attackers[] = ATTACKERS;
+    static const int size = sizeof(ATTACKERS) / sizeof(ATTACKERS[0]);
+    return is_in_set(attackers, size, value);
+}
+
+uint8_t is_explorers(int value) {
+    static const int explorers[] = EXPLORERS;
+    static const int size = sizeof(EXPLORERS) / sizeof(EXPLORERS[0]);
+    return is_in_set(explorers, size, value);
+}
+
+uint8_t is_collectors(int value) {
+    static const int collectors[] = COLLECTORS;
+    static const int size = sizeof(COLLECTORS) / sizeof(COLLECTORS[0]);
+    return is_in_set(collectors, size, value);
+}
+
+
+*/

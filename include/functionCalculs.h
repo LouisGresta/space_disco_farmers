@@ -13,7 +13,7 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
                               Planet *planets, uint8_t nb_planets,
                               uint16_t results[2][2]);
 
-float get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
-                       uint16_t end_y);
+uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
+                          uint16_t end_y);
 
 #endif // FONCTION_CALCULS_H

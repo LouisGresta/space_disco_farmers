@@ -4,10 +4,16 @@
 #include <string.h>
 
 #include "commands.h"
+#include "functionCalculs.h"
 
 #define MAX_COMMAND_SIZE 100
 
 static char buffer[MAX_COMMAND_SIZE];
+/*
+void move_v_max(Spaceship ship, uint16_t angle)
+{
+  uint16_t speed;
+}*/
 
 // print commands
 const char *move_str(uint8_t ship_id, uint16_t angle, uint16_t speed) {
