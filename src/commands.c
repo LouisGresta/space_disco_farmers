@@ -30,6 +30,7 @@ char **split(const char *str, const char delimiter, uint16_t *count) {
   delimiter_str[0] = delimiter;
   delimiter_str[1] = '\0';
   uint16_t i = 0;
+  *count = 0;
   for (i = 0; str[i] != '\0'; i++) {
     if (str[i] == delimiter) {
       (*count)++;
