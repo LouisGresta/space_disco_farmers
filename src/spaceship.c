@@ -1,7 +1,7 @@
 #include "spaceship.h"
 #include <stdlib.h>
 
-void create_spaceship(uint8_t team_id, uint8_t ship_id, uint16_t x, uint16_t y,
+void create_spaceship(uint8_t team_id, int8_t ship_id, uint16_t x, uint16_t y,
                       uint8_t broken, Spaceship *spaceships,
                       uint16_t *nb_spaceships) {
   Spaceship *new_spaceship = malloc(sizeof(Spaceship));

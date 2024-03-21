@@ -9,18 +9,18 @@
 
 static char buffer[MAX_COMMAND_SIZE];
 
-// Send commands to the server
-const char *move_command(uint8_t ship_id, uint16_t angle, uint16_t speed) {
+// print commands
+const char *move_str(uint8_t ship_id, uint16_t angle, uint16_t speed) {
   sprintf(buffer, "MOVE %d %d %d\n", ship_id, angle, speed);
   return buffer;
 }
 
-const char *fire_command(uint8_t ship_id, uint16_t angle) {
+const char *fire_str(uint8_t ship_id, uint16_t angle) {
   sprintf(buffer, "FIRE %d %d\n", ship_id, angle);
   return buffer;
 }
 
-const char *radar_command(uint8_t ship_id) {
+const char *radar_str(uint8_t ship_id) {
   sprintf(buffer, "RADAR %d\n", ship_id);
   return buffer;
 }
@@ -78,7 +78,8 @@ void process_spaceship(char **params, Spaceship *spaceships,
   uint16_t x = atoi(params[3]);
   uint16_t y = atoi(params[4]);
   uint8_t broken = atoi(params[5]);
-  Spaceship *spaceship = get_spaceship(ship_id, spaceships, *nb_spaceships);
+  Spaceship *spaceship =
+      get_spaceship(team_id, ship_id, spaceships, *nb_spaceships);
   if (spaceship == NULL) {
     // If the spaceship does not exist, create it
     create_spaceship(team_id, ship_id, x, y, broken, spaceships, nb_spaceships);
