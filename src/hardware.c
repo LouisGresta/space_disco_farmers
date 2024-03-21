@@ -88,6 +88,19 @@ char *itoa(int value, char *str, int base) {
   return str;
 }
 
+void push_button_init(void) {
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+uint8_t push_button_is_pressed(void) {
+  return HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+}
+
 static void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};

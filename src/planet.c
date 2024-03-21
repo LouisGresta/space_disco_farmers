@@ -1,7 +1,7 @@
 #include "planet.h"
 #include <stdlib.h>
 
-void create_planet(uint16_t planet_id, uint16_t x, uint16_t y, uint16_t ship_id,
+void create_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,
                    uint8_t saved, Planet *planets, uint16_t *nb_planets) {
   Planet *new_planet = malloc(sizeof(Planet));
   new_planet->planet_id = planet_id;

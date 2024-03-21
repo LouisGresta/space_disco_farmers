@@ -45,6 +45,7 @@ void Tache1(void *argument) {
 int main(void) {
   // les initialisations
   hardware_init();
+  push_button_init();
   osKernelInitialize();
 
   // tache dafault
@@ -53,6 +54,13 @@ int main(void) {
       .priority = (osPriority_t)osPriorityNormal,
       .stack_size = 2048,
   };
+
+  while (!push_button_is_pressed()) {
+    puts("Appuyez sur le bouton pour démarrer\n");
+    osDelay(1000);
+  }
+  // Start
+
   defaultTaskHandle =
       osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 

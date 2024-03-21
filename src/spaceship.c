@@ -14,10 +14,10 @@ void create_spaceship(uint8_t team_id, uint8_t ship_id, uint16_t x, uint16_t y,
   (*nb_spaceships)++;
 }
 
-void delete_spaceship(uint8_t ship_id, Spaceship *spaceships,
+void delete_spaceship(uint8_t team_id, int8_t ship_id, Spaceship *spaceships,
                       uint16_t *nb_spaceships) {
   for (uint16_t i = 0; i < *nb_spaceships; i++) {
-    if (spaceships[i].ship_id == ship_id) {
+    if (spaceships[i].team_id == team_id && spaceships[i].ship_id == ship_id) {
       free(&spaceships[i]);
       for (uint16_t j = i; j < *nb_spaceships - 1; j++) {
         spaceships[j] = spaceships[j + 1];
@@ -28,10 +28,10 @@ void delete_spaceship(uint8_t ship_id, Spaceship *spaceships,
   }
 }
 
-Spaceship *get_spaceship(uint8_t ship_id, Spaceship *spaceships,
+Spaceship *get_spaceship(uint8_t team_id, int8_t ship_id, Spaceship *spaceships,
                          uint16_t nb_spaceships) {
   for (uint16_t i = 0; i < nb_spaceships; i++) {
-    if (spaceships[i].ship_id == ship_id) {
+    if (spaceships[i].team_id == team_id && spaceships[i].ship_id == ship_id) {
       return &spaceships[i];
     }
   }

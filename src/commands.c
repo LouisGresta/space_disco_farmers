@@ -57,7 +57,7 @@ void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
   uint16_t planet_id = atoi(params[1]);
   uint16_t x = atoi(params[2]);
   uint16_t y = atoi(params[3]);
-  uint16_t ship_id = atoi(params[4]);
+  int8_t ship_id = atoi(params[4]);
   uint8_t saved = atoi(params[5]);
   Planet *planet = get_planet(planet_id, planets, *nb_planets);
   if (planet == NULL) {
@@ -74,7 +74,7 @@ void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
 void process_spaceship(char **params, Spaceship *spaceships,
                        uint16_t *nb_spaceships) {
   uint8_t team_id = atoi(params[1]);
-  uint8_t ship_id = atoi(params[2]);
+  int8_t ship_id = atoi(params[2]);
   uint16_t x = atoi(params[3]);
   uint16_t y = atoi(params[4]);
   uint8_t broken = atoi(params[5]);

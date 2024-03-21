@@ -7,17 +7,17 @@
 
 struct SpaceShip_t {
   uint8_t team_id;
-  uint8_t ship_id;
+  int8_t ship_id;
   uint16_t x;
   uint16_t y;
   uint8_t broken; // 0 ou 1
 } typedef Spaceship;
 
-void create_spaceship(uint8_t team_id, uint8_t ship_id, uint16_t x, uint16_t y,
+void create_spaceship(uint8_t team_id, int8_t ship_id, uint16_t x, uint16_t y,
                       uint8_t broken, Spaceship *spaceships,
                       uint16_t *nb_spaceships);
-void delete_spaceship(uint8_t ship_id, Spaceship *spaceships,
+void delete_spaceship(uint8_t team_id, int8_t ship_id, Spaceship *spaceships,
                       uint16_t *nb_spaceships);
-Spaceship *get_spaceship(uint8_t ship_id, Spaceship *spaceships,
-                         uint16_t nb_spaceships);
+Spaceship *get_spaceship(uint8_t team_id, uint8_t ship_id,
+                         Spaceship *spaceships, uint16_t nb_spaceships);
 #endif // SPACESHIP_H
