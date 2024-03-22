@@ -19,7 +19,6 @@ osThreadId_t defender2TaskHandle;
 osThreadId_t defender3TaskHandle;
 osThreadId_t defender4TaskHandle;
 
-uint16_t base_x, base_y;
 uint16_t collector_focus[2][2];
 
 // threads
@@ -134,7 +133,6 @@ int main(void) {
   osThreadTerminate(defender2TaskHandle);
   osThreadTerminate(defender3TaskHandle);
   osThreadTerminate(defender4TaskHandle);
-  // Stop the kernel
-  osKernelTerminate();
+
   return 0;
 }
