@@ -17,4 +17,8 @@ uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
                           uint16_t end_y);
 
 uint16_t get_angle_from_middle(uint16_t x_base, uint16_t y_base);
+
+uint16_t determine_next_circle_point(uint16_t results[2], uint16_t angle_actuel,
+                                     uint8_t direction);
+
 #endif // FONCTION_CALCULS_H

@@ -60,10 +60,33 @@ void test_get_angle_from_middle(void) {
   TEST_ASSERT_EQUAL(0, get_angle_from_middle(20000, 10000));
 }
 
+void test_determine_next_circle_point(void) {
+  uint16_t results[2];
+  uint16_t angle_result;
+  angle_result = determine_next_circle_point(results, 135, 0);
+
+  TEST_ASSERT_EQUAL(90, angle_result);
+  TEST_ASSERT_EQUAL(20000, results[1]);
+  TEST_ASSERT_EQUAL(10000, results[0]);
+
+  angle_result = determine_next_circle_point(results, 135, 1);
+
+  TEST_ASSERT_EQUAL(180, angle_result);
+  TEST_ASSERT_EQUAL(10000, results[1]);
+  TEST_ASSERT_EQUAL(0, results[0]);
+
+  angle_result = determine_next_circle_point(results, 315, 1);
+
+  TEST_ASSERT_EQUAL(0, angle_result);
+  TEST_ASSERT_EQUAL(10000, results[1]);
+  TEST_ASSERT_EQUAL(20000, results[0]);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_get_travel_angle);
   RUN_TEST(test_determine_target_planets);
   RUN_TEST(test_get_angle_from_middle);
+  RUN_TEST(test_determine_next_circle_point);
   return UNITY_END();
 }

@@ -32,7 +32,7 @@ uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
 // fonction qui calcule quel collecteur doit viser quelle planète
 // Format variable de retour => [collector1 ID, planet1 ID, collector2 ID,
 // planet2 ID] version actuelle => verif planete la plus proche du collecteur 1
-// et apres collecteur 2 donc c'est opti avec le cul A UPDATE !
+// et apres collecteur 2 donc A UPDATE!
 
 void determine_target_planets(Spaceship collector1, Spaceship collector2,
                               Planet *planets, uint8_t nb_planets,
@@ -100,4 +100,34 @@ uint16_t get_angle_from_middle(uint16_t x_base, uint16_t y_base) {
   }
 
   return result;
+}
+
+// Fonction pour nos vaisseaux attaquant qui font un cercle autour du milieu
+// direction = 0 pour si on va dans le sens des aiguille d'une montre, sinon 1
+uint16_t determine_next_circle_point(uint16_t results[2], uint16_t angle_actuel,
+                                     uint8_t direction) {
+  if (direction == 0)
+    angle_actuel -= (360 / NB_SEGMENT_IN_CIRCLE);
+  else
+    angle_actuel += (360 / NB_SEGMENT_IN_CIRCLE);
+
+  if (angle_actuel < 0)
+    angle_actuel += 360.0;
+
+  else if (angle_actuel >= 360)
+    angle_actuel -= 360;
+
+  // passage en radian pour utiliser les fonctions cos et sin
+  float angle_rad = angle_actuel * M_PI / 180.0;
+
+  // Récupération des coordonnées du point cible
+  results[0] = round((AREA_LENGTH / 2) +
+                     (AREA_LENGTH / 2) *
+                         cos(angle_rad)); // x du mid + Rayon * cos(angle)
+  results[1] = round((AREA_LENGTH / 2) +
+                     (AREA_LENGTH / 2) *
+                         sin(angle_rad)); // y du mid + Rayon * sin(angle)
+
+  // Récupération de l'angle du prochain point
+  return angle_actuel;
 }

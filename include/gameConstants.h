@@ -8,6 +8,8 @@
 
 #define AREA_LENGTH 20000
 
+#define NB_SEGMENT_IN_CIRCLE 8
+
 // Read-only
 #define ATTACKERS_SIZE 5
 #define EXPLORERS_SIZE 2
