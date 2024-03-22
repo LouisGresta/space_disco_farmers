@@ -77,7 +77,7 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
 }
 
 // retourne l'angle de la base par rapport au centre
-uint16_t get_base_angle(uint16_t x_base, uint16_t y_base) {
+uint16_t get_angle_from_middle(uint16_t x_base, uint16_t y_base) {
   uint16_t result = 0;
   // Si on est à gauche
   if (x_base == 0) {
