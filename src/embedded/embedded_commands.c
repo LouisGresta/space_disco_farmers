@@ -1,6 +1,7 @@
 #include "embedded_commands.h"
 #include "commands.h"
 #include "gameConstants.h"
+#include "os_utils.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,8 +11,10 @@ int8_t COLLECTORS[COLLECTORS_SIZE] = {8, 9};
 
 uint8_t move(int8_t ship_id, uint16_t angle, uint16_t speed) {
   char response[5];
+  get_mutex(serial_mutex_id);
   puts(move_str(ship_id, angle, speed));
   gets(response);
+  release_mutex(serial_mutex_id);
   if (strcmp(response, "OK") == 0) {
     return 1;
   }
@@ -44,8 +47,10 @@ uint8_t move_v_max(int8_t ship_id, uint16_t angle) {
 
 uint8_t fire(int8_t ship_id, uint16_t angle) {
   char response[5];
+  get_mutex(serial_mutex_id);
   puts(fire_str(ship_id, angle));
   gets(response);
+  release_mutex(serial_mutex_id);
   if (strcmp(response, "OK") == 0ULL) {
     return 1;
   }
@@ -53,9 +58,11 @@ uint8_t fire(int8_t ship_id, uint16_t angle) {
 }
 
 char *radar(int8_t ship_id) {
-  puts(radar_str(ship_id));
   char *response = malloc(sizeof(char) * MAX_RESPONSE_SIZE);
+  get_mutex(serial_mutex_id);
+  puts(radar_str(ship_id));
   gets(response);
+  release_mutex(serial_mutex_id);
   return response;
 }
 

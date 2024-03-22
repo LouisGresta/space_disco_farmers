@@ -2,11 +2,11 @@
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
 #endif
-#include "cmsis_os.h"
 #include "embedded_commands.h"
 #include "functionCalculs.h"
 #include "gameConstants.h"
 #include "main.h"
+#include "os_utils.h"
 #include "planet.h"
 #include "spaceship.h"
 
@@ -15,7 +15,7 @@ osThreadId_t explorer2TaskHandle;
 osThreadId_t collectorsTaskHandle;
 osThreadId_t attacker1TaskHandle;
 osThreadId_t attacker2TaskHandle;
-osThreadId_t attacker3TaskHandle;
+osThreadId_t baseDefenderTaskHandle;
 osThreadId_t defender1TaskHandle;
 osThreadId_t defender2TaskHandle;
 
@@ -27,7 +27,7 @@ uint16_t collector_focus[2][2];
 // get as argument the collector id to follow
 void explorerTask(void *argument) {
   while (1) {
-
+    puts("Explorer\n");
     osDelay(1000);
   }
 }
@@ -59,6 +59,10 @@ int main(void) {
   push_button_init();
   osKernelInitialize();
 
+  const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
+                                           NULL, 0U};
+  osMutexId_t serial_mutex_id = create_mutex(&serial_mutex_attr);
+
   while (!push_button_is_pressed()) {
     puts("Appuyez sur le bouton pour démarrer\n");
     osDelay(1000);
@@ -72,48 +76,48 @@ int main(void) {
       .priority = (osPriority_t)osPriorityHigh,
       .stack_size = 2048,
   };
-  if (explorer1TaskHandle =
-          osThreadNew(explorerTask, NULL, &explorersTask_attributes) == NULL) {
+  if ((explorer1TaskHandle = osThreadNew(explorerTask, NULL,
+                                         &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du premier explorer\n");
   }
-  if (explorer2TaskHandle =
-          osThreadNew(explorerTask, NULL, &explorersTask_attributes) == NULL) {
+  if ((explorer2TaskHandle = osThreadNew(explorerTask, NULL,
+                                         &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du deuxième explorer\n");
   }
   // collectors threads
   const osThreadAttr_t collectorsTask_attributes = {
       .name = "collectorsTask",
       .priority = (osPriority_t)osPriorityAboveNormal,
-      .stack_size = 2048,
+      .stack_size = 1024,
   };
-  if (collectorsTaskHandle = osThreadNew(collectorsTask, NULL,
-                                         &collectorsTask_attributes) == NULL) {
+  if ((collectorsTaskHandle = osThreadNew(
+           collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
   const osThreadAttr_t attackersTask_attributes = {
       .name = "attackersTask",
       .priority = (osPriority_t)osPriorityAboveNormal,
-      .stack_size = 2048,
+      .stack_size = 1024,
   };
-  if (attacker1TaskHandle =
-          osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
+  if ((attacker1TaskHandle = osThreadNew(attackerTask, NULL,
+                                         &attackersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des attaquants\n");
   }
-  if (attacker2TaskHandle =
-          osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
+  if ((attacker2TaskHandle = osThreadNew(attackerTask, NULL,
+                                         &attackersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des attaquants\n");
   }
-  if (attacker3TaskHandle =
-          osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
-    puts("Erreur lors de la création de la tache des attaquants\n");
+  if ((baseDefenderTaskHandle = osThreadNew(
+           defenderTask, NULL, &attackersTask_attributes)) == NULL) {
+    puts("Erreur lors de la création de la tache du défenseur de base\n");
   }
-  if (defender1TaskHandle =
-          osThreadNew(defenderTask, NULL, &attackersTask_attributes) == NULL) {
+  if ((defender1TaskHandle = osThreadNew(defenderTask, NULL,
+                                         &attackersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du premier défenseur\n");
   }
-  if (defender2TaskHandle =
-          osThreadNew(defenderTask, NULL, &attackersTask_attributes) == NULL) {
+  if ((defender2TaskHandle = osThreadNew(defenderTask, NULL,
+                                         &attackersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du deuxième défenseur\n");
   }
 
@@ -130,11 +134,8 @@ int main(void) {
   osThreadTerminate(collectorsTaskHandle);
   osThreadTerminate(attacker1TaskHandle);
   osThreadTerminate(attacker2TaskHandle);
+  osThreadTerminate(baseDefenderTaskHandle);
   osThreadTerminate(defender1TaskHandle);
   osThreadTerminate(defender2TaskHandle);
-  osThreadTerminate(attacker3TaskHandle);
-
-  // Stop the kernel
-  osKernelTerminate();
   return 0;
 }

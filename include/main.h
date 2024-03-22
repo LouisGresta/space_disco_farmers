@@ -1,6 +1,7 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
+#include "cmsis_os.h"
 #include "stm32f4xx_hal.h"
 void hardware_init(void);
 extern UART_HandleTypeDef huart2;
@@ -15,6 +16,8 @@ char *itoa(int value, char *str,
            int base); /* only base=10 and value>=0 is supported */
 void push_button_init(void);
 uint8_t push_button_is_pressed(void);
+
+extern osMutexId_t serial_mutex_id; // mutex for serial communication
 
 #define CS_I2C_SPI_Pin GPIO_PIN_3
 #define CS_I2C_SPI_GPIO_Port GPIOE
