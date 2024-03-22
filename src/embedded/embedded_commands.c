@@ -1,12 +1,12 @@
 #include "embedded_commands.h"
 #include "commands.h"
 #include "gameConstants.h"
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-int8_t ATTACKERS[ATTACKERS_SIZE] = { 1, 2, 3, 4, 5 };
-int8_t EXPLORERS[EXPLORERS_SIZE] = { 6, 7 };
-int8_t COLLECTORS[COLLECTORS_SIZE] = { 8, 9 };
+int8_t ATTACKERS[ATTACKERS_SIZE] = {1, 2, 3, 4, 5};
+int8_t EXPLORERS[EXPLORERS_SIZE] = {6, 7};
+int8_t COLLECTORS[COLLECTORS_SIZE] = {8, 9};
 
 uint8_t move(int8_t ship_id, uint16_t angle, uint16_t speed) {
   char response[5];
@@ -57,4 +57,11 @@ char *radar(int8_t ship_id) {
   char *response = malloc(sizeof(char) * MAX_RESPONSE_SIZE);
   gets(response);
   return response;
+}
+
+// fonction à call quand vaisseau détruit ou possède une planète
+void retour_base(Spaceship ship) {
+
+  uint16_t angle = get_travel_angle(ship.x, ship.y, base_x, base_y);
+  move_v_max(ship.ship_id, angle);
 }

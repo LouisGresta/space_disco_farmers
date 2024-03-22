@@ -22,17 +22,6 @@ osThreadId_t defender4TaskHandle;
 uint16_t base_x, base_y;
 uint16_t collector_focus[2][2];
 
-////////////////////////////////////////
-//           fonctions               //
-//////////////////////////////////////
-
-// fonction à call quand vaisseau détruit ou possède une planète
-void retour_base(Spaceship ship) {
-
-  float angle = get_travel_angle(ship.x, ship.y, base_x, base_y);
-  // move_v_max(ship.id, angle);
-}
-
 // threads
 
 // explorers
