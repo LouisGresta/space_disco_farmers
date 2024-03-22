@@ -13,11 +13,11 @@
 osThreadId_t explorer1TaskHandle;
 osThreadId_t explorer2TaskHandle;
 osThreadId_t collectorsTaskHandle;
-osThreadId_t attackerTaskHandle;
+osThreadId_t attacker1TaskHandle;
+osThreadId_t attacker2TaskHandle;
+osThreadId_t attacker3TaskHandle;
 osThreadId_t defender1TaskHandle;
 osThreadId_t defender2TaskHandle;
-osThreadId_t defender3TaskHandle;
-osThreadId_t defender4TaskHandle;
 
 uint16_t collector_focus[2][2];
 
@@ -96,7 +96,15 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 2048,
   };
-  if (attackerTaskHandle =
+  if (attacker1TaskHandle =
+          osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
+    puts("Erreur lors de la création de la tache des attaquants\n");
+  }
+  if (attacker2TaskHandle =
+          osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
+    puts("Erreur lors de la création de la tache des attaquants\n");
+  }
+  if (attacker3TaskHandle =
           osThreadNew(attackerTask, NULL, &attackersTask_attributes) == NULL) {
     puts("Erreur lors de la création de la tache des attaquants\n");
   }
@@ -107,14 +115,6 @@ int main(void) {
   if (defender2TaskHandle =
           osThreadNew(defenderTask, NULL, &attackersTask_attributes) == NULL) {
     puts("Erreur lors de la création de la tache du deuxième défenseur\n");
-  }
-  if (defender3TaskHandle =
-          osThreadNew(defenderTask, NULL, &attackersTask_attributes) == NULL) {
-    puts("Erreur lors de la création de la tache du troisième défenseur\n");
-  }
-  if (defender4TaskHandle =
-          osThreadNew(defenderTask, NULL, &attackersTask_attributes) == NULL) {
-    puts("Erreur lors de la création de la tache du quatrième défenseur\n");
   }
 
   // démarrage du noyau
@@ -128,11 +128,13 @@ int main(void) {
   osThreadTerminate(explorer1TaskHandle);
   osThreadTerminate(explorer2TaskHandle);
   osThreadTerminate(collectorsTaskHandle);
-  osThreadTerminate(attackerTaskHandle);
+  osThreadTerminate(attacker1TaskHandle);
+  osThreadTerminate(attacker2TaskHandle);
   osThreadTerminate(defender1TaskHandle);
   osThreadTerminate(defender2TaskHandle);
-  osThreadTerminate(defender3TaskHandle);
-  osThreadTerminate(defender4TaskHandle);
+  osThreadTerminate(attacker3TaskHandle);
 
+  // Stop the kernel
+  osKernelTerminate();
   return 0;
 }
