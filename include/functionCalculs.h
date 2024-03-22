@@ -16,4 +16,5 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
 uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
                           uint16_t end_y);
 
+uint16_t get_start_attack_angle(uint16_t x_base, uint16_t y_base);
 #endif // FONCTION_CALCULS_H

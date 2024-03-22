@@ -76,34 +76,29 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   results[1][1] = planets[index_planet2].planet_id;
 }
 
-/*
-
-uint8_t is_in_set(const int *set, int size, int value) {
-    for (int i = 0; i < size; i++) {
-        if (set[i] == value) {
-            return 1;
-        }
+// retourne l'angle de départ de attacker 1 selon la base de départ, attacker 2
+// peut etre déterminé en ajoutant 180 deg
+uint16_t get_start_attack_angle(uint16_t x_base, uint16_t y_base) {
+  uint16_t result = 0;
+  // Si on est à gauche
+  if (x_base == 0) {
+    result = 90;
+  }
+  // Si on est au milieu
+  else if (x_base == (AREA_LENGTH / 2)) {
+    // Si on est en bas
+    if (y_base == 0) {
+      result = 180;
     }
-    return 0;
+    // Si on est en haut
+    else {
+      result = 0;
+    }
+  }
+  // Si on est à droite
+  else {
+    result = 270;
+  }
+
+  return result;
 }
-
-uint8_t is_attackers(int value) {
-    static const int attackers[] = ATTACKERS;
-    static const int size = sizeof(ATTACKERS) / sizeof(ATTACKERS[0]);
-    return is_in_set(attackers, size, value);
-}
-
-uint8_t is_explorers(int value) {
-    static const int explorers[] = EXPLORERS;
-    static const int size = sizeof(EXPLORERS) / sizeof(EXPLORERS[0]);
-    return is_in_set(explorers, size, value);
-}
-
-uint8_t is_collectors(int value) {
-    static const int collectors[] = COLLECTORS;
-    static const int size = sizeof(COLLECTORS) / sizeof(COLLECTORS[0]);
-    return is_in_set(collectors, size, value);
-}
-
-
-*/
