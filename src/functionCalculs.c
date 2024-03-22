@@ -76,28 +76,27 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   results[1][1] = planets[index_planet2].planet_id;
 }
 
-// retourne l'angle de départ de attacker 1 selon la base de départ, attacker 2
-// peut etre déterminé en ajoutant 180 deg
-uint16_t get_start_attack_angle(uint16_t x_base, uint16_t y_base) {
+// retourne l'angle de la base par rapport au centre
+uint16_t get_base_angle(uint16_t x_base, uint16_t y_base) {
   uint16_t result = 0;
   // Si on est à gauche
   if (x_base == 0) {
-    result = 90;
+    result = 180;
   }
   // Si on est au milieu
   else if (x_base == (AREA_LENGTH / 2)) {
     // Si on est en bas
     if (y_base == 0) {
-      result = 180;
+      result = 270;
     }
     // Si on est en haut
     else {
-      result = 0;
+      result = 90;
     }
   }
   // Si on est à droite
   else {
-    result = 270;
+    result = 0;
   }
 
   return result;

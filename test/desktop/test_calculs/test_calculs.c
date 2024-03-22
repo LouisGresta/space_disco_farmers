@@ -53,17 +53,17 @@ void test_determine_target_planets(void) {
       3, results[1][1]); // Vérifie que le collecteur 2 cible la bonne planète
 }
 
-void test_get_start_attack_angle(void) {
-  TEST_ASSERT_EQUAL(180, get_start_attack_angle(10000, 0));
-  TEST_ASSERT_EQUAL(90, get_start_attack_angle(0, 10000));
-  TEST_ASSERT_EQUAL(0, get_start_attack_angle(10000, 20000));
-  TEST_ASSERT_EQUAL(270, get_start_attack_angle(20000, 10000));
+void test_get_base_angle(void) {
+  TEST_ASSERT_EQUAL(270, get_base_angle(10000, 0));
+  TEST_ASSERT_EQUAL(180, get_base_angle(0, 10000));
+  TEST_ASSERT_EQUAL(90, get_base_angle(10000, 20000));
+  TEST_ASSERT_EQUAL(0, get_base_angle(20000, 10000));
 }
 
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_get_travel_angle);
   RUN_TEST(test_determine_target_planets);
-  RUN_TEST(test_get_start_attack_angle);
+  RUN_TEST(test_get_base_angle);
   return UNITY_END();
 }
