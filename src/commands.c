@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "gameConstants.h"
 #include "commands.h"
+#include "gameConstants.h"
 
 #define MAX_COMMAND_SIZE 100
 
@@ -96,8 +96,8 @@ void process_spaceship(char **params, Spaceship *spaceships,
 }
 
 // Parse responses from the server
-int parse_radar_response(const char *response, Planet *planets,
-                         uint16_t *nb_planets, Spaceship *spaceships,
+int parse_radar_response(const char *response, Planet **planets,
+                         uint16_t *nb_planets, Spaceship **spaceships,
                          uint16_t *nb_spaceships, uint16_t *x_base,
                          uint16_t *y_base) {
   uint16_t count;

@@ -51,7 +51,7 @@ uint8_t fire(int8_t ship_id, uint16_t angle) {
   puts(fire_str(ship_id, angle));
   gets(response);
   release_mutex(serial_mutex_id);
-  if (strcmp(response, "OK") == 0ULL) {
+  if (strcmp(response, "OK") == 0) {
     return 1;
   }
   return 0;

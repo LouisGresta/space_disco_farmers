@@ -50,9 +50,9 @@ void test_split(void) {
 
 void test_parse_radar_response(void) {
   // Arrange
-  Planet planets[NB_MAX_PLANETS];
+  Planet *planets[NB_MAX_PLANETS];
   uint16_t nb_planets = 0;
-  Spaceship spaceships[NB_MAX_SPACESHIPS];
+  Spaceship *spaceships[NB_MAX_SPACESHIPS];
   uint16_t nb_spaceships = 0;
   uint16_t x_base = 0;
   uint16_t y_base = 0;
@@ -67,17 +67,19 @@ void test_parse_radar_response(void) {
   TEST_ASSERT_EQUAL(10000, x_base);
   TEST_ASSERT_EQUAL(2000, y_base);
   for (uint16_t i = 0; i < 5; i++) {
-    TEST_ASSERT_EQUAL(i, planets[i].planet_id);
-    TEST_ASSERT_EQUAL(i + 1, planets[i].x);
-    TEST_ASSERT_EQUAL(i + 2, planets[i].y);
-    TEST_ASSERT_EQUAL(i + 3, planets[i].ship_id);
-    TEST_ASSERT_EQUAL(i % 2, planets[i].saved);
+    TEST_ASSERT_EQUAL(i, planets[i]->planet_id);
+    TEST_ASSERT_EQUAL(i + 1, planets[i]->x);
+    TEST_ASSERT_EQUAL(i + 2, planets[i]->y);
+    TEST_ASSERT_EQUAL(i + 3, planets[i]->ship_id);
+    TEST_ASSERT_EQUAL(i % 2, planets[i]->saved);
 
-    TEST_ASSERT_EQUAL(i, spaceships[i].team_id);
-    TEST_ASSERT_EQUAL(i + 1, spaceships[i].ship_id);
-    TEST_ASSERT_EQUAL(i + 2, spaceships[i].x);
-    TEST_ASSERT_EQUAL(i % 2, spaceships[i].broken);
+    TEST_ASSERT_EQUAL(i, spaceships[i]->team_id);
+    TEST_ASSERT_EQUAL(i + 1, spaceships[i]->ship_id);
+    TEST_ASSERT_EQUAL(i + 2, spaceships[i]->x);
+    TEST_ASSERT_EQUAL(i % 2, spaceships[i]->broken);
   }
+  delete_all_planets(planets, &nb_planets);
+  delete_all_spaceships(spaceships, &nb_spaceships);
 }
 
 void build_radar_response(char *result) {
