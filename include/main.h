@@ -18,6 +18,9 @@ void push_button_init(void);
 uint8_t push_button_is_pressed(void);
 
 extern osMutexId_t serial_mutex_id; // mutex for serial communication
+// Solution pour envoyer plusieurs messages sans attendre le OK de réponse :
+// créer un compteur à incrémenter et décrémenter à chaque message envoyé et
+// reçu (utiliser le même mutex pour l'accès au compteur)
 
 #define CS_I2C_SPI_Pin GPIO_PIN_3
 #define CS_I2C_SPI_GPIO_Port GPIOE
