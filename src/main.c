@@ -2,7 +2,6 @@
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
 #endif
-#include "commands.h"
 #include "embedded_commands.h"
 #include "functionCalculs.h"
 #include "gameConstants.h"
@@ -23,14 +22,27 @@ const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
 osMutexId_t serial_mutex_id;
 
 uint16_t collector_focus[2][2];
-
+Planet *planets[NB_MAX_PLANETS];
+uint16_t nb_planets = 0;
+Spaceship *spaceships[NB_MAX_SPACESHIPS];
+uint16_t nb_spaceships = 0;
+uint16_t x_base = 0;
+uint16_t y_base = 0;
 // threads
-
+struct collector_follow_args {
+  int8_t collector_id;
+  int8_t id;
+} typedef collector_follow_args;
 // explorers
-// get as argument the collector id to follow
+// get as argument the collector id to follow and his id
 void explorerTask(void *argument) {
+  collector_follow_args *args = (collector_follow_args *)argument;
+  int8_t collector_id = args->collector_id;
+  int8_t explorer_id = args->id;
   while (1) {
-    radar(6);
+    char *radar_response = radar(collector_id);
+    parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
+                               &nb_spaceships, &x_base, &y_base);
     osDelay(1000);
   }
 }
@@ -44,6 +56,7 @@ void collectorsTask(void *argument) {
 }
 
 // attackers
+// get as argument his id
 void attackerTask(void *argument) {
   while (1) {
     osDelay(1000);
@@ -52,6 +65,9 @@ void attackerTask(void *argument) {
 
 // get as argument the collector id to follow
 void defenderTask(void *argument) {
+  collector_follow_args *args = (collector_follow_args *)argument;
+  int8_t collector_id = args->collector_id;
+  int8_t defender_id = args->id;
   while (1) {
     osDelay(1000);
   }

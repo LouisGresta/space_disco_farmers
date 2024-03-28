@@ -66,6 +66,16 @@ char *radar(int8_t ship_id) {
   return response;
 }
 
+void parse_radar_response_mutex(const char *response, Planet **planets,
+                                uint16_t *nb_planets, Spaceship **spaceships,
+                                uint16_t *nb_spaceships, uint16_t *x_base,
+                                uint16_t *y_base) {
+  get_mutex(planets_spceships_mutex_id);
+  parse_radar_response(response, planets, nb_planets, spaceships, nb_spaceships,
+                       x_base, y_base);
+  release_mutex(planets_spceships_mutex_id);
+}
+
 // fonction à call quand vaisseau détruit ou possède une planète
 void retour_base(Spaceship ship) {
 
