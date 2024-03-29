@@ -47,7 +47,7 @@ void explorerTask(void *argument) {
     char *radar_response = radar(explorer_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
-    osDelay(1000);
+    osDelay(2000);
   }
 }
 
