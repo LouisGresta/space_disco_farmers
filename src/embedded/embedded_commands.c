@@ -1,5 +1,6 @@
 #include "embedded_commands.h"
 #include "commands.h"
+#include "functionCalculs.h"
 #include "gameConstants.h"
 #include "os_utils.h"
 #include <stdlib.h>

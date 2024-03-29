@@ -2,6 +2,8 @@
 #define EMBEDDED_COMMANDS_H
 
 #include "main.h"
+#include "planet.h"
+#include "spaceship.h"
 #include <stdint.h>
 
 extern uint16_t base_x, base_y;
