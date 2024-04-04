@@ -62,7 +62,30 @@ void collectorsTask(void *argument) {
 // attackers
 void attackerTask(void *argument) {
   Spaceship *attacker = (Spaceship *)argument;
+  uint8_t direction = 0;
+  if (attacker->ship_id != 2) // le 2 va dans le sens horaire et le 4 en sens inverse
+    direction = 1;
+
+  uint16_t angle_actuel = 270;
+  uint16_t angle_cible = 0;
+  uint16_t results[2];
+
   while (1) {
+
+    // verif vaisseau cassé ou pas
+    // si cassé:
+    angle_actuel = 270;
+    // retour base
+
+    // si pas cassé :
+
+    angle_actuel =
+        determine_next_circle_point(results, angle_actuel, direction);
+    // get angle selon notre position initiale
+    // moov avec l'angle que l'on récupère au dessus
+    fire(attacker_id, angle_cible);
+    osDelay(1000);
+    fire(attacker_id, angle_cible);
     osDelay(1000);
   }
 }
@@ -172,12 +195,12 @@ int main(void) {
       .stack_size = 1024,
   };
   if ((attacker1TaskHandle = osThreadNew(
-           attackerTask, get_spaceship(0, 1, spaceships, nb_spaceships),
+           attackerTask, get_spaceship(0, 2, spaceships, nb_spaceships),
            &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache des attaquants\n");
   }
   if ((attacker2TaskHandle = osThreadNew(
-           attackerTask, get_spaceship(0, 2, spaceships, nb_spaceships),
+           attackerTask, get_spaceship(0, 4, spaceships, nb_spaceships),
            &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache des attaquants
   }
@@ -188,7 +211,7 @@ int main(void) {
     // Erreur lors de la création de la tache du défenseur de base
   }
   if ((defender1TaskHandle = osThreadNew(
-           defenderTask, get_spaceship(0, 4, spaceships, nb_spaceships),
+           defenderTask, get_spaceship(0, 1, spaceships, nb_spaceships),
            &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache du premier défenseur
   }
