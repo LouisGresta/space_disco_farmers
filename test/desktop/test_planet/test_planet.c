@@ -2,7 +2,7 @@
 #include "unity.h"
 #include <stdio.h>
 
-Planet *planets[NB_MAX_PLANETS];
+Planet planets[NB_MAX_PLANETS];
 uint16_t nb_planets = 0;
 
 void setUp(void) {
@@ -13,7 +13,7 @@ void setUp(void) {
 }
 
 void tearDown(void) {
-  // clean planets allocation
+  // clean planets
   delete_all_planets(planets, &nb_planets);
 }
 
@@ -28,11 +28,11 @@ void test_create_planet(void) {
   create_planet(planet_id, x, y, ship_id, saved, planets, &nb_planets);
   // Assert
   TEST_ASSERT_EQUAL(4, nb_planets);
-  TEST_ASSERT_EQUAL(planet_id, planets[nb_planets - 1]->planet_id);
-  TEST_ASSERT_EQUAL(x, planets[nb_planets - 1]->x);
-  TEST_ASSERT_EQUAL(y, planets[nb_planets - 1]->y);
-  TEST_ASSERT_EQUAL(ship_id, planets[nb_planets - 1]->ship_id);
-  TEST_ASSERT_EQUAL(saved, planets[nb_planets - 1]->saved);
+  TEST_ASSERT_EQUAL(planet_id, planets[nb_planets - 1].planet_id);
+  TEST_ASSERT_EQUAL(x, planets[nb_planets - 1].x);
+  TEST_ASSERT_EQUAL(y, planets[nb_planets - 1].y);
+  TEST_ASSERT_EQUAL(ship_id, planets[nb_planets - 1].ship_id);
+  TEST_ASSERT_EQUAL(saved, planets[nb_planets - 1].saved);
 }
 
 void test_get_planet_null(void) {
@@ -60,16 +60,16 @@ void test_set_bad_planet(void) {
   set_planet(500, 8000, 10000, 6, 1, planets, nb_planets);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_planets);
-  TEST_ASSERT_EQUAL(352, planets[0]->planet_id);
-  TEST_ASSERT_EQUAL(10000, planets[0]->x);
-  TEST_ASSERT_EQUAL(11200, planets[0]->y);
-  TEST_ASSERT_EQUAL(3, planets[0]->ship_id);
-  TEST_ASSERT_EQUAL(0, planets[0]->saved);
-  TEST_ASSERT_EQUAL(426, planets[1]->planet_id);
-  TEST_ASSERT_EQUAL(9000, planets[1]->x);
-  TEST_ASSERT_EQUAL(11000, planets[1]->y);
-  TEST_ASSERT_EQUAL(-1, planets[1]->ship_id);
-  TEST_ASSERT_EQUAL(0, planets[1]->saved);
+  TEST_ASSERT_EQUAL(352, planets[0].planet_id);
+  TEST_ASSERT_EQUAL(10000, planets[0].x);
+  TEST_ASSERT_EQUAL(11200, planets[0].y);
+  TEST_ASSERT_EQUAL(3, planets[0].ship_id);
+  TEST_ASSERT_EQUAL(0, planets[0].saved);
+  TEST_ASSERT_EQUAL(426, planets[1].planet_id);
+  TEST_ASSERT_EQUAL(9000, planets[1].x);
+  TEST_ASSERT_EQUAL(11000, planets[1].y);
+  TEST_ASSERT_EQUAL(-1, planets[1].ship_id);
+  TEST_ASSERT_EQUAL(0, planets[1].saved);
 }
 
 void test_set_planet(void) {
@@ -77,11 +77,11 @@ void test_set_planet(void) {
   set_planet(426, 9500, 12000, 2, 1, planets, nb_planets);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_planets);
-  TEST_ASSERT_EQUAL(426, planets[1]->planet_id);
-  TEST_ASSERT_EQUAL(9500, planets[1]->x);
-  TEST_ASSERT_EQUAL(12000, planets[1]->y);
-  TEST_ASSERT_EQUAL(2, planets[1]->ship_id);
-  TEST_ASSERT_EQUAL(1, planets[1]->saved);
+  TEST_ASSERT_EQUAL(426, planets[1].planet_id);
+  TEST_ASSERT_EQUAL(9500, planets[1].x);
+  TEST_ASSERT_EQUAL(12000, planets[1].y);
+  TEST_ASSERT_EQUAL(2, planets[1].ship_id);
+  TEST_ASSERT_EQUAL(1, planets[1].saved);
 }
 
 void test_delete_planet(void) {
@@ -89,11 +89,11 @@ void test_delete_planet(void) {
   delete_planet(352, planets, &nb_planets);
   // Assert
   TEST_ASSERT_EQUAL(2, nb_planets);
-  TEST_ASSERT_EQUAL(426, planets[0]->planet_id);
-  TEST_ASSERT_EQUAL(9000, planets[0]->x);
-  TEST_ASSERT_EQUAL(11000, planets[0]->y);
-  TEST_ASSERT_EQUAL(-1, planets[0]->ship_id);
-  TEST_ASSERT_EQUAL(0, planets[0]->saved);
+  TEST_ASSERT_EQUAL(426, planets[0].planet_id);
+  TEST_ASSERT_EQUAL(9000, planets[0].x);
+  TEST_ASSERT_EQUAL(11000, planets[0].y);
+  TEST_ASSERT_EQUAL(-1, planets[0].ship_id);
+  TEST_ASSERT_EQUAL(0, planets[0].saved);
 }
 
 void test_delete_all_planets(void) {

@@ -7,6 +7,9 @@
 #include "gameConstants.h"
 #include "main.h"
 #include "os_utils.h"
+#include <stdlib.h>
+
+#define MAX_RESPONSE_SIZE 1024
 
 osThreadId_t explorer1TaskHandle;
 osThreadId_t explorer2TaskHandle;
@@ -25,9 +28,9 @@ osMutexId_t serial_mutex_id;
 osMutexId_t planets_spceships_mutex_id;
 
 uint16_t collector_focus[2][2];
-Planet *planets[NB_MAX_PLANETS];
+Planet planets[NB_MAX_PLANETS];
 uint16_t nb_planets = 0;
-Spaceship *spaceships[NB_MAX_SPACESHIPS];
+Spaceship spaceships[NB_MAX_SPACESHIPS];
 uint16_t nb_spaceships = 0;
 uint16_t x_base = 0;
 uint16_t y_base = 0;
@@ -43,11 +46,13 @@ void explorerTask(void *argument) {
   collector_follow_args *args = (collector_follow_args *)argument;
   int8_t collector_id = args->collector_id;
   int8_t explorer_id = args->id;
+  char radar_response[MAX_RESPONSE_SIZE];
   while (1) {
-    char *radar_response = radar(explorer_id);
+    radar(radar_response, explorer_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
-    osDelay(2000);
+    // TODO : emit refresh signal for threads
+    osDelay(5000);
   }
 }
 
@@ -130,10 +135,7 @@ int main(void) {
   serial_mutex_id = create_mutex(&serial_mutex_attr);
   planets_spceships_mutex_id = create_mutex(&planets_spceships_mutex_attr);
 
-  while (!push_button_is_pressed()) {
-    osDelay(2000);
-  }
-  osDelay(3000);
+  gets(NULL); // wait the START message
 
   // explorers threads
   const osThreadAttr_t explorersTask_attributes = {

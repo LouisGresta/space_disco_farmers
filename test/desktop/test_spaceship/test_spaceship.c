@@ -2,7 +2,7 @@
 #include "unity.h"
 #include <stdlib.h>
 
-Spaceship *spaceships[NB_MAX_SPACESHIPS];
+Spaceship spaceships[NB_MAX_SPACESHIPS];
 uint16_t nb_spaceships = 0;
 
 void setUp(void) {
@@ -28,11 +28,11 @@ void test_create_spaceship(void) {
   create_spaceship(team_id, ship_id, x, y, broken, spaceships, &nb_spaceships);
   // Assert
   TEST_ASSERT_EQUAL(4, nb_spaceships);
-  TEST_ASSERT_EQUAL(team_id, spaceships[nb_spaceships - 1]->team_id);
-  TEST_ASSERT_EQUAL(ship_id, spaceships[nb_spaceships - 1]->ship_id);
-  TEST_ASSERT_EQUAL(x, spaceships[nb_spaceships - 1]->x);
-  TEST_ASSERT_EQUAL(y, spaceships[nb_spaceships - 1]->y);
-  TEST_ASSERT_EQUAL(broken, spaceships[nb_spaceships - 1]->broken);
+  TEST_ASSERT_EQUAL(team_id, spaceships[nb_spaceships - 1].team_id);
+  TEST_ASSERT_EQUAL(ship_id, spaceships[nb_spaceships - 1].ship_id);
+  TEST_ASSERT_EQUAL(x, spaceships[nb_spaceships - 1].x);
+  TEST_ASSERT_EQUAL(y, spaceships[nb_spaceships - 1].y);
+  TEST_ASSERT_EQUAL(broken, spaceships[nb_spaceships - 1].broken);
 }
 
 void test_get_spaceship_null(void) {
@@ -82,16 +82,16 @@ void test_delete_spaceship(void) {
   delete_spaceship(2, 4, spaceships, &nb_spaceships);
   // Assert
   TEST_ASSERT_EQUAL(2, nb_spaceships);
-  TEST_ASSERT_EQUAL(1, spaceships[0]->team_id);
-  TEST_ASSERT_EQUAL(3, spaceships[0]->ship_id);
-  TEST_ASSERT_EQUAL(10000, spaceships[0]->x);
-  TEST_ASSERT_EQUAL(11200, spaceships[0]->y);
-  TEST_ASSERT_EQUAL(1, spaceships[0]->broken);
-  TEST_ASSERT_EQUAL(3, spaceships[1]->team_id);
-  TEST_ASSERT_EQUAL(5, spaceships[1]->ship_id);
-  TEST_ASSERT_EQUAL(8000, spaceships[1]->x);
-  TEST_ASSERT_EQUAL(10000, spaceships[1]->y);
-  TEST_ASSERT_EQUAL(1, spaceships[1]->broken);
+  TEST_ASSERT_EQUAL(1, spaceships[0].team_id);
+  TEST_ASSERT_EQUAL(3, spaceships[0].ship_id);
+  TEST_ASSERT_EQUAL(10000, spaceships[0].x);
+  TEST_ASSERT_EQUAL(11200, spaceships[0].y);
+  TEST_ASSERT_EQUAL(1, spaceships[0].broken);
+  TEST_ASSERT_EQUAL(3, spaceships[1].team_id);
+  TEST_ASSERT_EQUAL(5, spaceships[1].ship_id);
+  TEST_ASSERT_EQUAL(8000, spaceships[1].x);
+  TEST_ASSERT_EQUAL(10000, spaceships[1].y);
+  TEST_ASSERT_EQUAL(1, spaceships[1].broken);
 }
 
 void test_delete_all_spaceships(void) {
