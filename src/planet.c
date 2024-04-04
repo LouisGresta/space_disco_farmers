@@ -38,14 +38,11 @@ void set_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,
 void delete_planet(uint16_t planet_id, Planet *planets, uint16_t *nb_planets) {
   for (uint16_t i = 0; i < *nb_planets; i++) {
     if (planets[i].planet_id == planet_id) {
-      for (uint16_t j = i; j < *nb_planets - 1; j++) {
-        planets[j] = planets[j + 1];
-      }
-      planets[*nb_planets].planet_id = 0;
-      planets[*nb_planets].x = 0;
-      planets[*nb_planets].y = 0;
-      planets[*nb_planets].ship_id = 0;
-      planets[*nb_planets].saved = 0;
+      planets[i].planet_id = 0;
+      planets[i].x = 0;
+      planets[i].y = 0;
+      planets[i].ship_id = 0;
+      planets[i].saved = 0;
       (*nb_planets)--;
       break;
     }

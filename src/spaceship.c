@@ -42,14 +42,11 @@ void delete_spaceship(uint8_t team_id, int8_t ship_id, Spaceship *spaceships,
                       uint16_t *nb_spaceships) {
   for (uint16_t i = 0; i < *nb_spaceships; i++) {
     if (spaceships[i].team_id == team_id && spaceships[i].ship_id == ship_id) {
-      for (uint16_t j = i; j < *nb_spaceships - 1; j++) {
-        spaceships[j] = spaceships[j + 1];
-      }
-      spaceships[*nb_spaceships].team_id = 0;
-      spaceships[*nb_spaceships].ship_id = 0;
-      spaceships[*nb_spaceships].x = 0;
-      spaceships[*nb_spaceships].y = 0;
-      spaceships[*nb_spaceships].broken = 0;
+      spaceships[i].team_id = 0;
+      spaceships[i].ship_id = 0;
+      spaceships[i].x = 0;
+      spaceships[i].y = 0;
+      spaceships[i].broken = 0;
       (*nb_spaceships)--;
       break;
     }
