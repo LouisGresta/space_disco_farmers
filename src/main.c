@@ -13,7 +13,8 @@
 
 osThreadId_t explorer1TaskHandle;
 osThreadId_t explorer2TaskHandle;
-osThreadId_t collectorsTaskHandle;
+osThreadId_t collector1TaskHandle;
+osThreadId_t collector2TaskHandle;
 osThreadId_t attacker1TaskHandle;
 osThreadId_t attacker2TaskHandle;
 osThreadId_t baseDefenderTaskHandle;
@@ -276,7 +277,11 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  if ((collectorsTaskHandle = osThreadNew(
+  if ((collector1TaskHandle = osThreadNew(
+           collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
+    puts("Erreur lors de la création de la tache des collecteurs\n");
+  }
+  if ((collector2TaskHandle = osThreadNew(
            collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
@@ -323,7 +328,8 @@ int main(void) {
   // Stop all threads
   osThreadTerminate(explorer1TaskHandle);
   osThreadTerminate(explorer2TaskHandle);
-  osThreadTerminate(collectorsTaskHandle);
+  osThreadTerminate(collector1TaskHandle);
+  osThreadTerminate(collector2TaskHandle);
   osThreadTerminate(attacker1TaskHandle);
   osThreadTerminate(attacker2TaskHandle);
   osThreadTerminate(baseDefenderTaskHandle);
