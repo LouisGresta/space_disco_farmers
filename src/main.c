@@ -23,7 +23,7 @@ const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
 const osMutexAttr_t planets_spceships_mutex_attr = {
     "planets_spceshipsMutex", osMutexPrioInherit, NULL, 0U};
 osMutexId_t serial_mutex_id;
-osMutexId_t planets_spceships_mutex_id;
+osMutexId_t planets_spaceships_mutex_id;
 
 uint16_t collector_focus[2][2];
 Planet planets[NB_MAX_PLANETS];
@@ -124,7 +124,7 @@ int main(void) {
   osKernelInitialize();
 
   serial_mutex_id = create_mutex(&serial_mutex_attr);
-  planets_spceships_mutex_id = create_mutex(&planets_spceships_mutex_attr);
+  planets_spaceships_mutex_id = create_mutex(&planets_spceships_mutex_attr);
 #ifdef DEBUG_SERIAL
   while (!push_button_is_pressed()) {
     // Wait for the user to press the button to start the program
@@ -145,14 +145,14 @@ int main(void) {
       .stack_size = 2048,
   };
 
-  if ((explorer1TaskHandle = osThreadNew(
-           explorerTask, get_spaceship(0, 6, spaceships, nb_spaceships),
-           &explorersTask_attributes)) == NULL) {
+  if ((explorer1TaskHandle =
+           osThreadNew(explorerTask, get_spaceship(0, 6, spaceships),
+                       &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du premier explorer\n");
   }
-  if ((explorer2TaskHandle = osThreadNew(
-           explorerTask, get_spaceship(0, 7, spaceships, nb_spaceships),
-           &explorersTask_attributes)) == NULL) {
+  if ((explorer2TaskHandle =
+           osThreadNew(explorerTask, get_spaceship(0, 7, spaceships),
+                       &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du deuxième explorer\n");
   }
   // collectors threads
@@ -171,30 +171,30 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  if ((attacker1TaskHandle = osThreadNew(
-           attackerTask, get_spaceship(0, 1, spaceships, nb_spaceships),
-           &attackersTask_attributes)) == NULL) {
+  if ((attacker1TaskHandle =
+           osThreadNew(attackerTask, get_spaceship(0, 1, spaceships),
+                       &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache des attaquants\n");
   }
-  if ((attacker2TaskHandle = osThreadNew(
-           attackerTask, get_spaceship(0, 2, spaceships, nb_spaceships),
-           &attackersTask_attributes)) == NULL) {
+  if ((attacker2TaskHandle =
+           osThreadNew(attackerTask, get_spaceship(0, 2, spaceships),
+                       &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache des attaquants
   }
 
-  if ((baseDefenderTaskHandle = osThreadNew(
-           baseDefenderTask, get_spaceship(0, 3, spaceships, nb_spaceships),
-           &attackersTask_attributes)) == NULL) {
+  if ((baseDefenderTaskHandle =
+           osThreadNew(baseDefenderTask, get_spaceship(0, 3, spaceships),
+                       &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache du défenseur de base
   }
-  if ((defender1TaskHandle = osThreadNew(
-           defenderTask, get_spaceship(0, 4, spaceships, nb_spaceships),
-           &attackersTask_attributes)) == NULL) {
+  if ((defender1TaskHandle =
+           osThreadNew(defenderTask, get_spaceship(0, 4, spaceships),
+                       &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache du premier défenseur
   }
-  if ((defender2TaskHandle = osThreadNew(
-           defenderTask, get_spaceship(0, 5, spaceships, nb_spaceships),
-           &attackersTask_attributes)) == NULL) {
+  if ((defender2TaskHandle =
+           osThreadNew(defenderTask, get_spaceship(0, 5, spaceships),
+                       &attackersTask_attributes)) == NULL) {
     // Erreur lors de la création de la tache du deuxième défenseur
   }
 

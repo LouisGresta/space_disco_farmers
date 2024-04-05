@@ -51,7 +51,7 @@ void parse_planet(char **params, Planet *planets, uint16_t *nb_planets) {
   uint16_t y = atoi(params[3]);
   int8_t ship_id = atoi(params[4]);
   uint8_t saved = atoi(params[5]);
-  Planet *planet = get_planet(planet_id, planets, *nb_planets);
+  Planet *planet = get_planet(planet_id, planets);
   if (planet == NULL) {
     // If the planet does not exist, create it
     create_planet(planet_id, x, y, ship_id, saved, planets, nb_planets);
@@ -70,8 +70,7 @@ void parse_spaceship(char **params, Spaceship *spaceships,
   uint16_t x = atoi(params[3]);
   uint16_t y = atoi(params[4]);
   uint8_t broken = atoi(params[5]);
-  Spaceship *spaceship =
-      get_spaceship(team_id, ship_id, spaceships, *nb_spaceships);
+  Spaceship *spaceship = get_spaceship(team_id, ship_id, spaceships);
   if (spaceship == NULL) {
     // If the spaceship does not exist, create it
     create_spaceship(team_id, ship_id, x, y, broken, spaceships, nb_spaceships);
