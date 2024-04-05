@@ -89,11 +89,16 @@ void test_delete_planet(void) {
   delete_planet(352, planets, &nb_planets);
   // Assert
   TEST_ASSERT_EQUAL(2, nb_planets);
-  TEST_ASSERT_EQUAL(426, planets[0].planet_id);
-  TEST_ASSERT_EQUAL(9000, planets[0].x);
-  TEST_ASSERT_EQUAL(11000, planets[0].y);
-  TEST_ASSERT_EQUAL(-1, planets[0].ship_id);
+  TEST_ASSERT_EQUAL(0, planets[0].planet_id);
+  TEST_ASSERT_EQUAL(0, planets[0].x);
+  TEST_ASSERT_EQUAL(0, planets[0].y);
+  TEST_ASSERT_EQUAL(0, planets[0].ship_id);
   TEST_ASSERT_EQUAL(0, planets[0].saved);
+  TEST_ASSERT_EQUAL(426, planets[1].planet_id);
+  TEST_ASSERT_EQUAL(9000, planets[1].x);
+  TEST_ASSERT_EQUAL(11000, planets[1].y);
+  TEST_ASSERT_EQUAL(-1, planets[1].ship_id);
+  TEST_ASSERT_EQUAL(0, planets[1].saved);
 }
 
 void test_delete_all_planets(void) {

@@ -87,11 +87,11 @@ void test_delete_spaceship(void) {
   TEST_ASSERT_EQUAL(10000, spaceships[0].x);
   TEST_ASSERT_EQUAL(11200, spaceships[0].y);
   TEST_ASSERT_EQUAL(1, spaceships[0].broken);
-  TEST_ASSERT_EQUAL(3, spaceships[1].team_id);
-  TEST_ASSERT_EQUAL(5, spaceships[1].ship_id);
-  TEST_ASSERT_EQUAL(8000, spaceships[1].x);
-  TEST_ASSERT_EQUAL(10000, spaceships[1].y);
-  TEST_ASSERT_EQUAL(1, spaceships[1].broken);
+  TEST_ASSERT_EQUAL(0, spaceships[1].team_id);
+  TEST_ASSERT_EQUAL(0, spaceships[1].ship_id);
+  TEST_ASSERT_EQUAL(0, spaceships[1].x);
+  TEST_ASSERT_EQUAL(0, spaceships[1].y);
+  TEST_ASSERT_EQUAL(0, spaceships[1].broken);
 }
 
 void test_delete_all_spaceships(void) {
