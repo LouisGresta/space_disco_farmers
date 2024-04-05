@@ -45,7 +45,7 @@ void split(char **tokens, const char *str, const char delimiter,
   (*count)++;
 }
 
-void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
+void parse_planet(char **params, Planet *planets, uint16_t *nb_planets) {
   uint16_t planet_id = atoi(params[1]);
   uint16_t x = atoi(params[2]);
   uint16_t y = atoi(params[3]);
@@ -63,8 +63,8 @@ void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
   planet->saved = saved;
 }
 
-void process_spaceship(char **params, Spaceship *spaceships,
-                       uint16_t *nb_spaceships) {
+void parse_spaceship(char **params, Spaceship *spaceships,
+                     uint16_t *nb_spaceships) {
   uint8_t team_id = atoi(params[1]);
   int8_t ship_id = atoi(params[2]);
   uint16_t x = atoi(params[3]);
@@ -95,9 +95,9 @@ void parse_radar_response(const char *response, Planet *planets,
     char *params[MAX_SPLIT_COUNT];
     split(params, str_scan[i], ' ', &nb_params);
     if (params[0][0] == PLANET) {
-      process_planet(params, planets, nb_planets);
+      parse_planet(params, planets, nb_planets);
     } else if (params[0][0] == SPACESHIP) {
-      process_spaceship(params, spaceships, nb_spaceships);
+      parse_spaceship(params, spaceships, nb_spaceships);
     } else if (params[0][0] == BASE) {
       *x_base = atoi(params[1]);
       *y_base = atoi(params[2]);
