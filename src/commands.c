@@ -5,16 +5,8 @@
 #include "commands.h"
 #include "gameConstants.h"
 
-#define MAX_COMMAND_SIZE 100
-
 static char buffer[MAX_COMMAND_SIZE];
-/*
-void move_v_max(Spaceship ship, uint16_t angle)
-{
-  uint16_t speed;
-}*/
 
-// print commands
 char *move_str(int8_t ship_id, uint16_t angle, uint16_t speed) {
   sprintf(buffer, "MOVE %d %d %d\n", ship_id, angle, speed);
   return buffer;
@@ -30,32 +22,27 @@ char *radar_str(int8_t ship_id) {
   return buffer;
 }
 
-char **split(const char *str, const char delimiter, uint16_t *count) {
-  char delimiter_str[2];
-  delimiter_str[0] = delimiter;
-  delimiter_str[1] = '\0';
+void split(char **tokens, const char *str, const char delimiter,
+           uint16_t *count) {
   uint16_t i = 0;
   *count = 0;
+  uint16_t pos = 0;
+  char token[MAX_COMMAND_SIZE];
   for (i = 0; str[i] != '\0'; i++) {
     if (str[i] == delimiter) {
+      token[pos] = '\0';
+      tokens[*count] = strdup(token);
       (*count)++;
+      pos = 0;
+      token[0] = '\0';
+    } else {
+      token[pos] = str[i];
+      pos++;
     }
   }
+  token[pos] = '\0';
+  tokens[*count] = strdup(token);
   (*count)++;
-
-  char *token;
-  char **tokens = malloc(sizeof(char *) * *count);
-  if (!tokens)
-    return NULL;
-  i = 0;
-  char *tmp = strdup(str);
-  token = strtok(tmp, delimiter_str);
-  while (token != NULL) {
-    tokens[i] = token;
-    token = strtok(NULL, delimiter_str);
-    i++;
-  }
-  return tokens;
 }
 
 void process_planet(char **params, Planet *planets, uint16_t *nb_planets) {
@@ -96,15 +83,17 @@ void process_spaceship(char **params, Spaceship *spaceships,
 }
 
 // Parse responses from the server
-void parse_radar_response(const char *response, Planet **planets,
-                          uint16_t *nb_planets, Spaceship **spaceships,
+void parse_radar_response(const char *response, Planet *planets,
+                          uint16_t *nb_planets, Spaceship *spaceships,
                           uint16_t *nb_spaceships, uint16_t *x_base,
                           uint16_t *y_base) {
   uint16_t count;
-  char **str_scan = split(response, ',', &count);
+  char *str_scan[MAX_SPLIT_COUNT];
+  split(str_scan, response, ',', &count);
   for (uint16_t i = 0; i < count; i++) {
     uint16_t nb_params;
-    char **params = split(str_scan[i], ' ', &nb_params);
+    char *params[MAX_SPLIT_COUNT];
+    split(params, str_scan[i], ' ', &nb_params);
     if (params[0][0] == PLANET) {
       process_planet(params, planets, nb_planets);
     } else if (params[0][0] == SPACESHIP) {
@@ -113,7 +102,5 @@ void parse_radar_response(const char *response, Planet **planets,
       *x_base = atoi(params[1]);
       *y_base = atoi(params[2]);
     }
-    free(params);
   }
-  free(str_scan);
 }

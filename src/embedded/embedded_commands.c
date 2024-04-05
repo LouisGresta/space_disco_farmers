@@ -58,17 +58,15 @@ uint8_t fire(int8_t ship_id, uint16_t angle) {
   return 0;
 }
 
-char *radar(int8_t ship_id) {
-  char *response = malloc(sizeof(char) * MAX_RESPONSE_SIZE);
+void radar(char *response, int8_t ship_id) {
   get_mutex(serial_mutex_id);
   puts(radar_str(ship_id));
   gets(response);
   release_mutex(serial_mutex_id);
-  return response;
 }
 
-void parse_radar_response_mutex(const char *response, Planet **planets,
-                                uint16_t *nb_planets, Spaceship **spaceships,
+void parse_radar_response_mutex(const char *response, Planet *planets,
+                                uint16_t *nb_planets, Spaceship *spaceships,
                                 uint16_t *nb_spaceships, uint16_t *x_base,
                                 uint16_t *y_base) {
   get_mutex(planets_spceships_mutex_id);

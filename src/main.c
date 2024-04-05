@@ -1,12 +1,13 @@
-#include <math.h>
-#ifndef M_PI
-#define M_PI (3.14159265358979323846)
-#endif
+#include "main.h"
 #include "embedded_commands.h"
 #include "functionCalculs.h"
 #include "gameConstants.h"
-#include "main.h"
 #include "os_utils.h"
+#include <stdlib.h>
+
+// #define DEBUG_SERIAL 1
+
+#define MAX_RESPONSE_SIZE 1024
 
 osThreadId_t explorer1TaskHandle;
 osThreadId_t explorer2TaskHandle;
@@ -25,9 +26,9 @@ osMutexId_t serial_mutex_id;
 osMutexId_t planets_spceships_mutex_id;
 
 uint16_t collector_focus[2][2];
-Planet *planets[NB_MAX_PLANETS];
+Planet planets[NB_MAX_PLANETS];
 uint16_t nb_planets = 0;
-Spaceship *spaceships[NB_MAX_SPACESHIPS];
+Spaceship spaceships[NB_MAX_SPACESHIPS];
 uint16_t nb_spaceships = 0;
 uint16_t x_base = 0;
 uint16_t y_base = 0;
@@ -38,16 +39,15 @@ struct collector_follow_args {
 } typedef collector_follow_args;
 
 // explorers
-// get as argument the collector id to follow and his id
 void explorerTask(void *argument) {
-  collector_follow_args *args = (collector_follow_args *)argument;
-  int8_t collector_id = args->collector_id;
-  int8_t explorer_id = args->id;
+  Spaceship *explorer = (Spaceship *)argument;
+  char radar_response[MAX_RESPONSE_SIZE];
   while (1) {
-    char *radar_response = radar(explorer_id);
+    radar(radar_response, explorer->ship_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
-    osDelay(1000);
+    // TODO : emit refresh signal for threads
+    osDelay(5000);
   }
 }
 
@@ -60,9 +60,8 @@ void collectorsTask(void *argument) {
 }
 
 // attackers
-// get as argument his id
 void attackerTask(void *argument) {
-  int8_t attacker_id = *(int8_t *)argument;
+  Spaceship *attacker = (Spaceship *)argument;
   while (1) {
     osDelay(1000);
   }
@@ -70,25 +69,22 @@ void attackerTask(void *argument) {
 
 // get as argument the collector id to follow
 void defenderTask(void *argument) {
-  collector_follow_args *args = (collector_follow_args *)argument;
-  int8_t collector_id = args->collector_id;
-  int8_t defender_id = args->id;
+  Spaceship *defender = (Spaceship *)argument;
   while (1) {
     osDelay(1000);
   }
 }
 
 // base defender
-// get as argument his id
 void baseDefenderTask(void *argument) {
-  int8_t base_defender_id = *(int8_t *)argument;
+  Spaceship *base_defender = (Spaceship *)argument;
   uint32_t startTime = osKernelGetTickCount(); // Temps de départ
   int direction = 1; // 1 pour avancer, -1 pour reculer
   int isVerticalMovementComplete =
       0; // 0 pour mouvement vertical en cours, 1 pour terminé
 
   while (1) {
-    fire(base_defender_id, 90);
+    fire(base_defender->ship_id, 90);
 
     uint32_t elapsedTime = osKernelGetTickCount() - startTime;
 
@@ -96,7 +92,7 @@ void baseDefenderTask(void *argument) {
       if (elapsedTime < 2500) { // Durée du mouvement vertical en millisecondes
                                 // (par exemple, 5000 pour 5 secondes)
         move(
-            base_defender_id, 90,
+            base_defender->ship_id, 90,
             1000); // Déplacer verticalement (exemple : angle 90, durée 1000 ms)
       } else {
         isVerticalMovementComplete = 1; // Le mouvement vertical est terminé
@@ -107,9 +103,9 @@ void baseDefenderTask(void *argument) {
           10000) { // Temps total du parcours horizontal en millisecondes (par
                    // exemple, 10000 pour 10 secondes)
         if (direction == 1) {
-          move(base_defender_id, 0, 2000); // Avancer
+          move(base_defender->ship_id, 0, 2000); // Avancer
         } else {
-          move(base_defender_id, 180, 2000); // Reculer
+          move(base_defender->ship_id, 180, 2000); // Reculer
         }
       } else {
         startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
@@ -129,27 +125,34 @@ int main(void) {
 
   serial_mutex_id = create_mutex(&serial_mutex_attr);
   planets_spceships_mutex_id = create_mutex(&planets_spceships_mutex_attr);
-
+#ifdef DEBUG_SERIAL
   while (!push_button_is_pressed()) {
-    osDelay(2000);
+    // Wait for the user to press the button to start the program
+    osDelay(1000);
   }
-  osDelay(3000);
-
+#else
+  gets(NULL); // wait the START message
+#endif
+  // first scan
+  char radar_response[MAX_RESPONSE_SIZE];
+  radar(radar_response, 6);
+  parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
+                             &nb_spaceships, &x_base, &y_base);
   // explorers threads
   const osThreadAttr_t explorersTask_attributes = {
       .name = "explorersTask",
       .priority = (osPriority_t)osPriorityHigh,
       .stack_size = 2048,
   };
-  collector_follow_args explorer1_args = {8, 6};
-  collector_follow_args explorer2_args = {9, 7};
 
-  if ((explorer1TaskHandle = osThreadNew(explorerTask, &explorer1_args,
-                                         &explorersTask_attributes)) == NULL) {
+  if ((explorer1TaskHandle = osThreadNew(
+           explorerTask, get_spaceship(0, 6, spaceships, nb_spaceships),
+           &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du premier explorer\n");
   }
-  if ((explorer2TaskHandle = osThreadNew(explorerTask, &explorer2_args,
-                                         &explorersTask_attributes)) == NULL) {
+  if ((explorer2TaskHandle = osThreadNew(
+           explorerTask, get_spaceship(0, 7, spaceships, nb_spaceships),
+           &explorersTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache du deuxième explorer\n");
   }
   // collectors threads
@@ -168,32 +171,31 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  int8_t attacker1_id = 1;
-  int8_t attacker2_id = 2;
-  int8_t base_defender_id = 3;
-  if ((attacker1TaskHandle = osThreadNew(attackerTask, &attacker1_id,
-                                         &attackersTask_attributes)) == NULL) {
-    puts("Erreur lors de la création de la tache des attaquants\n");
+  if ((attacker1TaskHandle = osThreadNew(
+           attackerTask, get_spaceship(0, 1, spaceships, nb_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache des attaquants\n");
   }
-  if ((attacker2TaskHandle = osThreadNew(attackerTask, &attacker2_id,
-                                         &attackersTask_attributes)) == NULL) {
-    puts("Erreur lors de la création de la tache des attaquants\n");
+  if ((attacker2TaskHandle = osThreadNew(
+           attackerTask, get_spaceship(0, 2, spaceships, nb_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache des attaquants
   }
 
-  if ((baseDefenderTaskHandle = osThreadNew(baseDefenderTask, &base_defender_id,
-                                            &attackersTask_attributes)) ==
-      NULL) {
-    puts("Erreur lors de la création de la tache du défenseur de base\n");
+  if ((baseDefenderTaskHandle = osThreadNew(
+           baseDefenderTask, get_spaceship(0, 3, spaceships, nb_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du défenseur de base
   }
-  collector_follow_args defender1_args = {8, 4};
-  collector_follow_args defender2_args = {9, 5};
-  if ((defender1TaskHandle = osThreadNew(defenderTask, &defender1_args,
-                                         &attackersTask_attributes)) == NULL) {
-    puts("Erreur lors de la création de la tache du premier défenseur\n");
+  if ((defender1TaskHandle = osThreadNew(
+           defenderTask, get_spaceship(0, 4, spaceships, nb_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du premier défenseur
   }
-  if ((defender2TaskHandle = osThreadNew(defenderTask, &defender2_args,
-                                         &attackersTask_attributes)) == NULL) {
-    puts("Erreur lors de la création de la tache du deuxième défenseur\n");
+  if ((defender2TaskHandle = osThreadNew(
+           defenderTask, get_spaceship(0, 5, spaceships, nb_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du deuxième défenseur
   }
 
   // démarrage du noyau
