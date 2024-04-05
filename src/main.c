@@ -5,7 +5,7 @@
 #include "os_utils.h"
 #include <stdlib.h>
 
-#define DEBUG_SERIAL 1
+// #define DEBUG_SERIAL 1
 
 #define MAX_RESPONSE_SIZE 1024
 
