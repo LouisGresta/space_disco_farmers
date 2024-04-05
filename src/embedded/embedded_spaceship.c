@@ -10,9 +10,21 @@ void init_embedded_spaceship(Embedded_spaceship *embedded_spaceship,
 
 void init_embedded_spaceships(Embedded_spaceship *embedded_spaceships,
                               Spaceship *spaceships, uint16_t nb_spaceships) {
-  for (uint16_t i = 0; i < nb_spaceships; i++) {
+  for (uint16_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
     init_embedded_spaceship(&embedded_spaceships[i], &spaceships[i], i);
   }
+}
+
+Embedded_spaceship *
+get_embedded_spaceship(uint8_t team_id, int8_t ship_id,
+                       Embedded_spaceship *embedded_spaceships) {
+  for (uint8_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
+    if (embedded_spaceships->spaceship->team_id == team_id &&
+        embedded_spaceships->spaceship->ship_id == ship_id) {
+      return &embedded_spaceships[i];
+    }
+  }
+  return NULL;
 }
 
 Spaceship get_spaceship_mutex(Embedded_spaceship *embedded_spaceships,
