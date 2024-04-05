@@ -1,6 +1,9 @@
 #include "embedded_spaceship.h"
 #include "os_utils.h"
 
+const osMutexAttr_t spaceships_mutex_attr = {"spaceshipsMutex",
+                                             osMutexPrioInherit, NULL, 0U};
+
 void init_embedded_spaceship(Embedded_spaceship *embedded_spaceship,
                              Spaceship *spaceship, uint8_t index) {
   embedded_spaceship->spaceship = spaceship;
@@ -9,7 +12,7 @@ void init_embedded_spaceship(Embedded_spaceship *embedded_spaceship,
 }
 
 void init_embedded_spaceships(Embedded_spaceship *embedded_spaceships,
-                              Spaceship *spaceships, uint16_t nb_spaceships) {
+                              Spaceship *spaceships) {
   for (uint16_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
     init_embedded_spaceship(&embedded_spaceships[i], &spaceships[i], i);
   }

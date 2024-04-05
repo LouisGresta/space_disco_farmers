@@ -7,9 +7,6 @@
 
 extern osMutexId_t planets_spaceships_mutex_id;
 
-const osMutexAttr_t spaceships_mutex_attr = {"spaceshipsMutex",
-                                             osMutexPrioInherit, NULL, 0U};
-
 struct Embedded_spaceship_t {
   Spaceship *spaceship;
   uint8_t index;
@@ -19,7 +16,11 @@ struct Embedded_spaceship_t {
 void init_embedded_spaceship(Embedded_spaceship *embedded_spaceship,
                              Spaceship *spaceship, uint8_t index);
 void init_embedded_spaceships(Embedded_spaceship *embedded_spaceships,
-                              Spaceship *spaceships, uint16_t nb_spaceships);
+                              Spaceship *spaceships);
+
+Embedded_spaceship *
+get_embedded_spaceship(uint8_t team_id, int8_t ship_id,
+                       Embedded_spaceship *embedded_spaceships);
 
 Spaceship get_spaceship_mutex(Embedded_spaceship *embedded_spaceships,
                               uint8_t index);
