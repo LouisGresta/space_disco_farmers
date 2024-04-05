@@ -70,6 +70,8 @@ Priorisation des taches :
 ------------------------------------------------------------------
 Notes Louis pour le rapport :
 
+Structure du projet et tests unitaires :
+
 1 - Partis sur des tests basiques avec minunit
 2 - Mise en place des pre-commit pour le formattage de code qui amène la réflexion de lancer automatiquement les tests dans le processus de commit/push
 3 - mise en place d'un makefile + script pour build tout les tests du répertoire 'test'
@@ -78,6 +80,18 @@ Notes Louis pour le rapport :
 6 - choix de migrer nos tests et notre façon de faire avec minunit pour écrire nos tests avec 'unity' (framework de test intégré à platformio) pour pouvoir utiliser le workflow découvert
 7 - complications car il a fallu initialiser un environnement 'native' pour pouvoir run nos tests en local sur notre machine + fichiers unity_config pour les tests sur stm32
 8 - build de l'environnement 'native' en erreur à cause des imports FreeRTOS et stm32
-9 - mise en place d'inclusion/exclusion de fichiers pour build juste ce qu'il nous faut pour tester nos fichiers car nos fichiers sont rangés d'une manière qui plaît pas à platformio donc obligé de bidouyer (forcer le runner des tests à comiler les sources)
+9 - mise en place d'inclusion/exclusion de fichiers pour build juste ce qu'il nous faut pour tester nos fichiers car nos fichiers sont rangés d'une manière qui plaît pas à platformio donc obligé de bidouyer (forcer le runner des tests à compiler les sources)
 10 - revue de l'arborescence des tests pour éviter des erreurs de compilation car 2 fichiers de tests dans le meme répertoire de test = 2 fonctions main en même temps pour le compilateur
 11 - implémentation workflow GitHub
+
+Pour le parsing de la réponse du radar :
+Problèmes eus avec strtok et revert fait pour malloc pas necessaire dans notre cas.
+
+Après le premier parsing, initialiser les planetes et vaisseaux avec leurs mutex vu qu'ils ne seront pas supprimés.
+
+Séparation des vaisseaux en 2 listes : vaisseaux alliés et vaisseaux ennemis
+Pourquoi ? Parce qu'on a plus souvent besoin d'accéder aux coordonnées de certains vaisseaux alliés spécifiques donc un mutex par vaisseau alliés. Mais souvent pour les vaisseaux ennemis on parcours la liste de ces vaisseaux pour savoir lequel est à portée de tir donc un mutex pour la liste
+De plus les vaisseaux alliés une fois créés ne seront pas supprimés car toujours présents. Or les vaisseaux ennemis peuvent dans une évolution future être supprimés de la liste si ils ne sont plus détectés.
+
+Finalement non on sait que les 9 premiers indexes de la liste des vaisseaux sont nos vaisseaux car au premier scan aucun des vaisseaux ennemis sont visibles.
+Donc on passera seulement un mutex par vaisseau pour nos vaisseaux alliés. Pour parcourir parmis les vaisseaux ennemis un unique mutex sera utilisé.
