@@ -58,6 +58,16 @@ Fonctions obligatoires :
 -Collecteur tout droit sur planète attitré
 
 -comportement des defenseurs
+  - comportement défenseur de la base :
+    - trajectoire en forme de trapèze
+    - tirer sur les vaisseaux ennemis proches
+      -> fonction qui calcul la distance entre deux points (vaisseaux) à partir de leurs coordonnées x, y
+      -> parcourir les vaisseaux pour savoir sur qui tirer :
+        si la distance entre le vaisseau défenseur et le vaisseau ennemi est inférieure à 5000 -> cibler ce vaisseau ennemi
+        (vaisseau ennemi : team_id != 0)
+        retourne le vaisseau ennemi à cibler
+      -> récupère l'angle entre le point du vaisseau défenseur et du vaisseau ennemi pour orienter le tir
+    - si aucun ennemi proche, tirer aléatoirement
 
 -comportement des attaquants
 
