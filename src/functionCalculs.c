@@ -51,8 +51,8 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   // Variables pour stocker les distances minimales et les indices des planètes
   uint16_t min_distance1 = AREA_LENGTH;
   uint16_t min_distance2 = AREA_LENGTH;
-  uint8_t index_planet1;
-  uint8_t index_planet2;
+  uint8_t index_planet1 = 0;
+  uint8_t index_planet2 = 0;
 
   for (uint8_t i = 0; i < nb_planets; i++) {
 

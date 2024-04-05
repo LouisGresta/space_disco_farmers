@@ -6,6 +6,7 @@
 #include "gameConstants.h"
 #include "os_utils.h"
 #include <stdlib.h>
+#include <string.h>
 
 // #define DEBUG_SERIAL 1
 
@@ -31,7 +32,10 @@ osMutexId_t serial_mutex_id;
 osMutexId_t spaceships_mutex_id;
 osMutexId_t planets_mutex_id;
 
-uint16_t collector_focus[2][2];
+uint16_t collector_focus[2][2] = {{0, 0}, {0, 0}};
+
+uint16_t collector_focus[2][2] = {{0, 0}, {0, 0}};
+
 Planet planets[NB_MAX_PLANETS] = {0};
 uint16_t nb_planets = 0;
 Spaceship spaceships[NB_MAX_SPACESHIPS] = {0};
@@ -90,9 +94,50 @@ void explorerTask(void *argument) {
 
 // collectors
 void collectorsTask(void *argument) {
+  Spaceship *collector = (Spaceship *)argument;
+  Planet *target = NULL;
+
+  // 8 est le collecteur principal qui récolte la data
+  if (collector->ship_id == 8) {
+    Spaceship *collector2 = get_spaceship(0, 9, spaceships, nb_spaceships);
+    determine_target_planets(*collector, *collector2, planets, nb_planets,
+                             collector_focus);
+  }
+
   while (1) {
-    move(8, 90, 1000);
-    osDelay(1000);
+
+    // l'action ne se fait que si le focus a été initialisé
+    if (memcmp(collector_focus, "\0\0\0\0", sizeof(collector_focus)) != 0) {
+
+      if (collector_focus[0][0] == collector->ship_id) {
+        // Récupération de la planète cible
+        target = get_planet(collector_focus[0][1], planets, nb_planets);
+        if (collector->broken == 0 && target->ship_id == -1) {
+
+          // move vers la planète cible
+          move(collector->ship_id,
+               get_travel_angle(collector->x, collector->y, target->x,
+                                target->y),
+               COLLECTORS_MAX_SPEED);
+        } else {
+          retour_base(*collector, x_base, y_base);
+        }
+      } else if (collector_focus[1][0] == collector->ship_id) {
+        // Récupération de la planète cible
+        target = get_planet(collector_focus[1][1], planets, nb_planets);
+        if (collector->broken == 0 && target->ship_id == -1) {
+          // move vers la planète cible
+          move(collector->ship_id,
+               get_travel_angle(collector->x, collector->y, target->x,
+                                target->y),
+               COLLECTORS_MAX_SPEED);
+        } else {
+          retour_base(*collector, x_base, y_base);
+        }
+      }
+    }
+
+    osDelay(1500);
   }
 }
 
@@ -278,11 +323,13 @@ int main(void) {
       .stack_size = 1024,
   };
   if ((collector1TaskHandle = osThreadNew(
-           collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
+           collectorsTask, get_spaceship(0, 8, spaceships, nb_spaceships),
+           &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   if ((collector2TaskHandle = osThreadNew(
-           collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
+           collectorsTask, get_spaceship(0, 9, spaceships, nb_spaceships),
+           &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
@@ -335,5 +382,8 @@ int main(void) {
   osThreadTerminate(baseDefenderTaskHandle);
   osThreadTerminate(defender1TaskHandle);
   osThreadTerminate(defender2TaskHandle);
+
+  while (1)
+    ;
   return 0;
 }
