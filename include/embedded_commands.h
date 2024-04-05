@@ -25,4 +25,6 @@ void parse_radar_response_mutex(const char *response, Planet *planets,
 
 void retour_base(Spaceship ship, uint16_t x_base, uint16_t y_base);
 
+void retour_base(Spaceship ship, uint16_t x_base, uint16_t y_base);
+
 #endif // EMBEDDED_COMMANDS_H
