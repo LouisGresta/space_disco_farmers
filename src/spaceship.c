@@ -63,11 +63,13 @@ void delete_all_spaceships(Spaceship *spaceships, uint16_t *nb_spaceships) {
 }
 
 void spaceship_to_string(char *str, Spaceship spaceship) {
-  sprintf(str, "Spaceship %d: x=%d, y=%d, broken=%d", spaceship.ship_id,
-          spaceship.x, spaceship.y, spaceship.broken);
+  sprintf(str, "Spaceship %d: team_id:%d, x=%d, y=%d, broken=%d",
+          spaceship.team_id, spaceship.ship_id, spaceship.x, spaceship.y,
+          spaceship.broken);
 }
 
 void spaceships_to_string(char *str, Spaceship *spaceships) {
+  str[0] = '\0';
   for (uint16_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
     char spaceship_str[100];
     spaceship_to_string(spaceship_str, spaceships[i]);

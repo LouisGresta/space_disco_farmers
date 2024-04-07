@@ -27,10 +27,10 @@ osMutexId_t serial_mutex_id;
 osMutexId_t planets_spaceships_mutex_id;
 
 uint16_t collector_focus[2][2];
-Planet planets[NB_MAX_PLANETS];
+Planet planets[NB_MAX_PLANETS] = {0};
 uint16_t nb_planets = 0;
-Spaceship spaceships[NB_MAX_SPACESHIPS];
-Embedded_spaceship embedded_spaceships[NB_MAX_SPACESHIPS];
+Spaceship spaceships[NB_MAX_SPACESHIPS] = {0};
+Embedded_spaceship embedded_spaceships[NB_MAX_SPACESHIPS] = {0};
 uint16_t nb_spaceships = 0;
 uint16_t x_base = 0;
 uint16_t y_base = 0;

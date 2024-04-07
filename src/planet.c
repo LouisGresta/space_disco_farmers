@@ -65,6 +65,7 @@ void planet_to_string(char *str, Planet planet) {
           planet.x, planet.y, planet.ship_id, planet.saved);
 }
 void planets_to_string(char *str, Planet *planets) {
+  str[0] = '\0';
   for (uint16_t i = 0; i < NB_MAX_PLANETS; i++) {
     char planet_str[100];
     planet_to_string(planet_str, planets[i]);
