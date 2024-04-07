@@ -23,8 +23,11 @@ const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
                                          NULL, 0U};
 const osMutexAttr_t planets_spaceships_mutex_attr = {
     "planets_spaceshipsMutex", osMutexPrioInherit, NULL, 0U};
+const osMutexAttr_t planets_mutex_attr = {"planetsMutex", osMutexPrioInherit,
+                                          NULL, 0U};
 osMutexId_t serial_mutex_id;
 osMutexId_t planets_spaceships_mutex_id;
+osMutexId_t planets_mutex_id;
 
 uint16_t collector_focus[2][2];
 Planet planets[NB_MAX_PLANETS] = {0};
@@ -146,6 +149,7 @@ int main(void) {
 
   serial_mutex_id = create_mutex(&serial_mutex_attr);
   planets_spaceships_mutex_id = create_mutex(&planets_spaceships_mutex_attr);
+  planets_mutex_id = create_mutex(&planets_mutex_attr);
 #ifdef DEBUG_SERIAL
   while (!push_button_is_pressed()) {
     // Wait for the user to press the button to start the program
