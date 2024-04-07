@@ -22,8 +22,8 @@ Embedded_spaceship *
 get_embedded_spaceship(uint8_t team_id, int8_t ship_id,
                        Embedded_spaceship *embedded_spaceships) {
   for (uint8_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
-    if (embedded_spaceships->spaceship->team_id == team_id &&
-        embedded_spaceships->spaceship->ship_id == ship_id) {
+    if (embedded_spaceships[i].spaceship->team_id == team_id &&
+        embedded_spaceships[i].spaceship->ship_id == ship_id) {
       return &embedded_spaceships[i];
     }
   }

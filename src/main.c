@@ -46,14 +46,15 @@ void explorerTask(void *argument) {
   Spaceship explorer =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   char radar_response[MAX_RESPONSE_SIZE];
-
+  if (embedded_ship->spaceship->ship_id == 6) {
+    osDelay(500); // Pour désynchroniser le scan des radars
+  }
   while (1) {
     explorer = update_spaceship_mutex(explorer, embedded_spaceships,
                                       embedded_ship->index);
     radar(radar_response, explorer.ship_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
-    // TODO : emit refresh signal for threads
     osDelay(5000);
   }
 }
@@ -138,7 +139,6 @@ void baseDefenderTask(void *argument) {
 }
 
 int main(void) {
-  // les initialisations
   hardware_init();
   push_button_init();
   osKernelInitialize();
