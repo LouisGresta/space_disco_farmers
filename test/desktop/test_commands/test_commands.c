@@ -12,6 +12,9 @@ void build_spaceship_response(char *result, uint8_t team_id, uint8_t ship_id,
                               uint16_t x, uint16_t y, uint8_t broken);
 void build_base_response(char *result, uint16_t x, uint16_t y);
 void build_radar_response(char *result);
+void assert_radar_response(Planet *planets, uint16_t nb_planets,
+                           Spaceship *spaceships, uint16_t nb_spaceships,
+                           uint16_t x_base, uint16_t y_base);
 
 void setUp(void) {
   // set stuff up here
@@ -40,7 +43,7 @@ void test_radar_command(void) {
 
 void test_split(void) {
   uint16_t count;
-  char *tokens[MAX_SPLIT_COUNT];
+  char *tokens[4];
   split(tokens, "Theo,Louis,Pachelle Carelle", ',', &count);
   TEST_ASSERT_EQUAL(3, count);
   TEST_ASSERT_EQUAL_STRING("Theo", tokens[0]);
@@ -62,23 +65,33 @@ void test_parse_radar_response(void) {
   parse_radar_response(response, planets, &nb_planets, spaceships,
                        &nb_spaceships, &x_base, &y_base);
   // Assert
-  TEST_ASSERT_EQUAL(5, nb_planets);
-  TEST_ASSERT_EQUAL(5, nb_spaceships);
-  TEST_ASSERT_EQUAL(10000, x_base);
-  TEST_ASSERT_EQUAL(2000, y_base);
-  for (uint16_t i = 0; i < 5; i++) {
-    TEST_ASSERT_EQUAL(i + 1, planets[i].planet_id);
-    TEST_ASSERT_EQUAL(i + 2, planets[i].x);
-    TEST_ASSERT_EQUAL(i + 3, planets[i].y);
-    TEST_ASSERT_EQUAL(i + 4, planets[i].ship_id);
-    TEST_ASSERT_EQUAL((i + 1) % 2, planets[i].saved);
+  assert_radar_response(planets, nb_planets, spaceships, nb_spaceships, x_base,
+                        y_base);
+  // cleanup
+  delete_all_planets(planets, &nb_planets);
+  delete_all_spaceships(spaceships, &nb_spaceships);
+}
 
-    TEST_ASSERT_EQUAL(i + 1, spaceships[i].team_id);
-    TEST_ASSERT_EQUAL(i + 2, spaceships[i].ship_id);
-    TEST_ASSERT_EQUAL(i + 3, spaceships[i].x);
-    TEST_ASSERT_EQUAL(i + 4, spaceships[i].y);
-    TEST_ASSERT_EQUAL((i + 1) % 2, spaceships[i].broken);
-  }
+void test_parse_radar_response_update(void) {
+  // Arrange
+  Planet planets[NB_MAX_PLANETS] = {0};
+  uint16_t nb_planets = 0;
+  Spaceship spaceships[NB_MAX_SPACESHIPS] = {0};
+  uint16_t nb_spaceships = 0;
+  uint16_t x_base = 0;
+  uint16_t y_base = 0;
+  char response[200] = "P 1 20 30 40 1,P 2 30 40 50 1,S 1 2 30 40 1,S 2 3 40 "
+                       "50 0,B 10000 2000\n";
+  parse_radar_response(response, planets, &nb_planets, spaceships,
+                       &nb_spaceships, &x_base, &y_base);
+  build_radar_response(response);
+  // Act
+  parse_radar_response(response, planets, &nb_planets, spaceships,
+                       &nb_spaceships, &x_base, &y_base);
+  // Assert
+  assert_radar_response(planets, nb_planets, spaceships, nb_spaceships, x_base,
+                        y_base);
+  // cleanup
   delete_all_planets(planets, &nb_planets);
   delete_all_spaceships(spaceships, &nb_spaceships);
 }
@@ -115,6 +128,28 @@ void build_base_response(char *result, uint16_t x, uint16_t y) {
   sprintf(result, "B %d %d", x, y);
 }
 
+void assert_radar_response(Planet *planets, uint16_t nb_planets,
+                           Spaceship *spaceships, uint16_t nb_spaceships,
+                           uint16_t x_base, uint16_t y_base) {
+  TEST_ASSERT_EQUAL(5, nb_planets);
+  TEST_ASSERT_EQUAL(5, nb_spaceships);
+  TEST_ASSERT_EQUAL(10000, x_base);
+  TEST_ASSERT_EQUAL(2000, y_base);
+  for (uint16_t i = 0; i < 5; i++) {
+    TEST_ASSERT_EQUAL(i + 1, planets[i].planet_id);
+    TEST_ASSERT_EQUAL(i + 2, planets[i].x);
+    TEST_ASSERT_EQUAL(i + 3, planets[i].y);
+    TEST_ASSERT_EQUAL(i + 4, planets[i].ship_id);
+    TEST_ASSERT_EQUAL((i + 1) % 2, planets[i].saved);
+
+    TEST_ASSERT_EQUAL(i + 1, spaceships[i].team_id);
+    TEST_ASSERT_EQUAL(i + 2, spaceships[i].ship_id);
+    TEST_ASSERT_EQUAL(i + 3, spaceships[i].x);
+    TEST_ASSERT_EQUAL(i + 4, spaceships[i].y);
+    TEST_ASSERT_EQUAL((i + 1) % 2, spaceships[i].broken);
+  }
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_move_command);
@@ -122,5 +157,6 @@ int main(void) {
   RUN_TEST(test_radar_command);
   RUN_TEST(test_split);
   RUN_TEST(test_parse_radar_response);
+  RUN_TEST(test_parse_radar_response_update);
   return UNITY_END();
 }

@@ -87,11 +87,11 @@ void parse_radar_response(const char *response, Planet *planets,
                           uint16_t *nb_spaceships, uint16_t *x_base,
                           uint16_t *y_base) {
   uint16_t count;
-  char *str_scan[MAX_SPLIT_COUNT];
+  char *str_scan[NB_MAX_PLANETS + NB_MAX_SPACESHIPS + 1];
   split(str_scan, response, ',', &count);
   for (uint16_t i = 0; i < count; i++) {
     uint16_t nb_params;
-    char *params[MAX_SPLIT_COUNT];
+    char *params[NB_MAX_PARAMS];
     split(params, str_scan[i], ' ', &nb_params);
     if (params[0][0] == PLANET) {
       parse_planet(params, planets, nb_planets);
@@ -101,5 +101,11 @@ void parse_radar_response(const char *response, Planet *planets,
       *x_base = atoi(params[1]);
       *y_base = atoi(params[2]);
     }
+    for (uint16_t j = 0; j < nb_params; j++) {
+      free(params[j]);
+    }
+  }
+  for (uint16_t i = 0; i < count; i++) {
+    free(str_scan[i]);
   }
 }

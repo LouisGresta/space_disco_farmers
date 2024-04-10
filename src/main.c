@@ -177,7 +177,7 @@ int main(void) {
   const osThreadAttr_t explorersTask_attributes = {
       .name = "explorersTask",
       .priority = (osPriority_t)osPriorityHigh,
-      .stack_size = 2048,
+      .stack_size = 4096,
   };
 
   if ((explorer1TaskHandle = osThreadNew(
@@ -194,7 +194,7 @@ int main(void) {
   const osThreadAttr_t collectorsTask_attributes = {
       .name = "collectorsTask",
       .priority = (osPriority_t)osPriorityAboveNormal,
-      .stack_size = 1024,
+      .stack_size = 512,
   };
   if ((collectorsTaskHandle = osThreadNew(
            collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
@@ -204,7 +204,7 @@ int main(void) {
   const osThreadAttr_t attackersTask_attributes = {
       .name = "attackersTask",
       .priority = (osPriority_t)osPriorityAboveNormal,
-      .stack_size = 1024,
+      .stack_size = 512,
   };
   if ((attacker1TaskHandle = osThreadNew(
            attackerTask, get_embedded_spaceship(0, 1, embedded_spaceships),

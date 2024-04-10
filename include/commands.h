@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 #define MAX_COMMAND_SIZE 100
-#define MAX_SPLIT_COUNT 200
+#define NB_MAX_PARAMS 6
 
 char *move_str(int8_t ship_id, uint16_t angle, uint16_t speed);
 char *fire_str(int8_t ship_id, uint16_t angle);
