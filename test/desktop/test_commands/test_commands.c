@@ -49,6 +49,9 @@ void test_split(void) {
   TEST_ASSERT_EQUAL_STRING("Theo", tokens[0]);
   TEST_ASSERT_EQUAL_STRING("Louis", tokens[1]);
   TEST_ASSERT_EQUAL_STRING("Pachelle Carelle", tokens[2]);
+  for (uint16_t i = 0; i < count; i++) {
+    free(tokens[i]);
+  }
 }
 
 void test_parse_radar_response(void) {
