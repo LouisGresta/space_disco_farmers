@@ -48,13 +48,22 @@ void explorerTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship explorer =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  Embedded_spaceship *embedded_collector;
+  Spaceship collector;
   char radar_response[MAX_RESPONSE_SIZE];
   if (embedded_ship->spaceship->ship_id == 6) {
+    embedded_collector = get_embedded_spaceship(0, 8, embedded_spaceships);
     osDelay(500); // Pour désynchroniser le scan des radars
+  } else {
+    embedded_collector = get_embedded_spaceship(0, 9, embedded_spaceships);
   }
+  collector =
+      get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   while (1) {
     explorer = update_spaceship_mutex(explorer, embedded_spaceships,
                                       embedded_ship->index);
+    collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                       embedded_collector->index);
     radar(radar_response, explorer.ship_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
