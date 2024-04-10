@@ -67,6 +67,7 @@ void explorerTask(void *argument) {
     radar(radar_response, explorer.ship_id);
     parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
                                &nb_spaceships, &x_base, &y_base);
+    move_spaceship_to(explorer, collector.x, collector.y, 1000);
     osDelay(5000);
   }
 }

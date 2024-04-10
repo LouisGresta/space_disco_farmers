@@ -9,6 +9,8 @@
 extern uint16_t base_x, base_y;
 uint8_t move(int8_t ship_id, uint16_t angle, uint16_t speed);
 uint8_t move_v_max(int8_t ship_id, uint16_t angle);
+uint8_t move_spaceship_to(Spaceship spaceship, uint16_t x, uint16_t y,
+                          uint16_t speed);
 uint8_t fire(int8_t ship_id, uint16_t angle);
 void radar(char *response, int8_t ship_id);
 

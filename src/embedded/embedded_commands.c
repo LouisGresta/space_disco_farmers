@@ -46,6 +46,12 @@ uint8_t move_v_max(int8_t ship_id, uint16_t angle) {
   return move(ship_id, angle, speed);
 }
 
+uint8_t move_spaceship_to(Spaceship spaceship, uint16_t x, uint16_t y,
+                          uint16_t speed) {
+  uint16_t angle = get_travel_angle(spaceship.x, spaceship.y, x, y);
+  return move(spaceship.ship_id, angle, speed);
+}
+
 uint8_t fire(int8_t ship_id, uint16_t angle) {
   char response[5];
   get_mutex(serial_mutex_id);
