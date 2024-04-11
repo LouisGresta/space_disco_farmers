@@ -149,7 +149,7 @@ Spaceship *determine_target_spaceship(Spaceship our_ships,
         our_ships.x, our_ships.y, ennemy_ships[i].x, ennemy_ships[i].y);
 
     // vérifier si la planète est la + proche de collector1
-    if (distance_spaceship < FIRE_RANGE) {
+    if (distance_spaceship < FIRE_RANGE && ennemy_ships[i].team_id != 0) {
       return &ennemy_ships[i];
     }
   }

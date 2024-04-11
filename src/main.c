@@ -112,32 +112,29 @@ void baseDefenderTask(void *argument) {
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint32_t startTime = osKernelGetTickCount(); // Temps de départ
   int state = 0; // État du mouvement trapézoïdal
-  move(base_defender.ship_id, 0, 3000);
 
   while (1) {
     base_defender = update_spaceship_mutex(base_defender, embedded_spaceships,
                                            embedded_ship->index);
-    Spaceship *ennemy_ships =
+    Spaceship *ennemy_ship =
         determine_target_spaceship(base_defender, spaceships, nb_spaceships);
 
-    if (ennemy_ships == NULL) {
+    if (ennemy_ship == NULL) {
 
       fire(base_defender.ship_id, 90);
     } else {
-      int a = get_travel_angle(base_defender.x, base_defender.y,
-                               ennemy_ships->x, ennemy_ships->y);
+      int a = get_travel_angle(base_defender.x, base_defender.y, ennemy_ship->x,
+                               ennemy_ship->y);
       fire(base_defender.ship_id, a);
     }
-
-    // int angle = rand()%361;
-    // fire(base_defender->ship_id, angle);
 
     uint32_t elapsedTime = osKernelGetTickCount() - startTime;
 
     if (state == 0) {
       // Mouvement vers l'avant
       if (elapsedTime < 4000) {
-        move(base_defender.ship_id, 0, 3000); // Avancer à la vitesse maximale
+        move(base_defender.ship_id, 0,
+             ATTACKERS_MAX_SPEED); // Avancer à la vitesse maximale
       } else {
         startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
         state = 1;                          // Changer d'état
@@ -155,7 +152,8 @@ void baseDefenderTask(void *argument) {
     } else if (state == 2) {
       // Mouvement vers l'arrière
       if (elapsedTime < 6000) {
-        move(base_defender.ship_id, 180, 3000); // Reculer à la vitesse maximale
+        move(base_defender.ship_id, 180,
+             ATTACKERS_MAX_SPEED); // Reculer à la vitesse maximale
       } else {
         startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
         state = 3;                          // Changer d'état
