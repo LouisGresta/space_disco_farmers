@@ -139,19 +139,18 @@ uint16_t determine_next_circle_point(uint16_t results[2], uint16_t angle_actuel,
   // Récupération de l'angle du prochain point
   return angle_actuel;
 }
-Spaceship *determine_target_spaceship(Spaceship our_ships,
-                                      Spaceship *ennemy_ships,
-                                      uint8_t nb_spaceships) {
+uint16_t determine_target_spaceship_angle(Spaceship attacker_ship,
+                                          Spaceship *spaceships) {
 
-  for (uint8_t i = 0; i < nb_spaceships; i++) {
+  for (uint8_t i = 0; i < NB_MAX_SPACESHIPS; i++) {
 
     uint16_t distance_spaceship = distance_calcul(
-        our_ships.x, our_ships.y, ennemy_ships[i].x, ennemy_ships[i].y);
+        attacker_ship.x, attacker_ship.y, spaceships[i].x, spaceships[i].y);
 
-    // vérifier si la planète est la + proche de collector1
-    if (distance_spaceship < FIRE_RANGE && ennemy_ships[i].team_id != 0) {
-      return &ennemy_ships[i];
+    if (distance_spaceship < FIRE_RANGE && spaceships[i].team_id != 0) {
+      return get_travel_angle(attacker_ship.x, attacker_ship.y, spaceships[i].x,
+                              spaceships[i].y);
     }
   }
-  return NULL;
+  return NOT_FOUND; // 404 Not Found
 }

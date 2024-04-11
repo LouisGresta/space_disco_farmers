@@ -125,6 +125,7 @@ void defenderTask(void *argument) {
   collector =
       get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   uint8_t is_returning = 0;
+  uint16_t fire_angle = NOT_FOUND;
   while (1) {
     defender = update_spaceship_mutex(defender, embedded_spaceships,
                                       embedded_ship->index);
@@ -139,7 +140,13 @@ void defenderTask(void *argument) {
       // follow the collector
       move_spaceship_to(defender, collector.x, collector.y,
                         ATTACKERS_MAX_SPEED);
-      // TODO : verify ennemies near defender and fire at the good angle
+      fire_angle = determine_target_spaceship_angle(defender, spaceships);
+      if (fire_angle != NOT_FOUND) {
+        fire(defender.ship_id, fire_angle);
+      } else {
+        fire(defender.ship_id,
+             (get_angle_from_middle(x_base, y_base) + 180) % 360);
+      }
     }
     osDelay(1000);
   }
@@ -151,21 +158,17 @@ void baseDefenderTask(void *argument) {
   Spaceship base_defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint32_t startTime = osKernelGetTickCount(); // Temps de départ
-  int state = 0; // État du mouvement trapézoïdal
-
+  uint8_t state = 0; // État du mouvement trapézoïdal
+  uint16_t fire_angle = NOT_FOUND;
   while (1) {
     base_defender = update_spaceship_mutex(base_defender, embedded_spaceships,
                                            embedded_ship->index);
-    Spaceship *ennemy_ship =
-        determine_target_spaceship(base_defender, spaceships, nb_spaceships);
-
-    if (ennemy_ship == NULL) {
-
-      fire(base_defender.ship_id, 90);
+    fire_angle = determine_target_spaceship_angle(base_defender, spaceships);
+    if (fire_angle != NOT_FOUND) {
+      fire(base_defender.ship_id, fire_angle);
     } else {
-      int a = get_travel_angle(base_defender.x, base_defender.y, ennemy_ship->x,
-                               ennemy_ship->y);
-      fire(base_defender.ship_id, a);
+      fire(base_defender.ship_id,
+           (get_angle_from_middle(x_base, y_base) + 180) % 360);
     }
 
     uint32_t elapsedTime = osKernelGetTickCount() - startTime;
