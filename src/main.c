@@ -92,46 +92,57 @@ void explorerTask(void *argument) {
 
 // collectors
 void collectorsTask(void *argument) {
-  Spaceship *collector = (Spaceship *)argument;
+  // Spaceship *collector = (Spaceship *)argument;
   Planet *target;
 
+  Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
+  Spaceship collector =
+      get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                     embedded_ship->index);
+
   // 8 est le collecteur principal qui récolte la data
-  if (collector->ship_id == 8) {
-    Spaceship *collector2 = get_spaceship(0, 9, spaceships);
-    determine_target_planets(*collector, *collector2, planets, nb_planets,
+  if (collector.ship_id == 8) {
+    Embedded_spaceship *embedded_collector2;
+    Spaceship collector2;
+    embedded_collector2 = get_embedded_spaceship(0, 9, embedded_spaceships);
+    collector2 =
+        get_spaceship_mutex(embedded_spaceships, embedded_collector2->index);
+    // Spaceship collector2 = get_spaceship(0, 9, spaceships);
+    determine_target_planets(collector, collector2, planets, nb_planets,
                              collector_focus);
   }
 
   while (1) {
+    collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                       embedded_ship->index);
 
     // l'action ne se fait que si le focus a été initialisé
     if (memcmp(collector_focus, (uint16_t[2][2]){{0, 0}, {0, 0}},
                sizeof(collector_focus)) != 0) {
 
-      if (collector_focus[0][0] == collector->ship_id) {
+      if (collector_focus[0][0] == collector.ship_id) {
         // Récupération de la planète cible
         target = get_planet(collector_focus[0][1], planets);
-        if (collector->broken == 0 && target->ship_id == -1) {
+        if (collector.broken == 0 && target->ship_id == -1) {
 
           // move vers la planète cible
-          move(collector->ship_id,
-               get_travel_angle(collector->x, collector->y, target->x,
-                                target->y),
+          move(collector.ship_id,
+               get_travel_angle(collector.x, collector.y, target->x, target->y),
                COLLECTORS_MAX_SPEED);
         } else {
-          retour_base(*collector, x_base, y_base);
+          retour_base(collector, x_base, y_base);
         }
-      } else if (collector_focus[1][0] == collector->ship_id) {
+      } else if (collector_focus[1][0] == collector.ship_id) {
         // Récupération de la planète cible
         target = get_planet(collector_focus[1][1], planets);
-        if (collector->broken == 0 && target->ship_id == -1) {
+        if (collector.broken == 0 && target->ship_id == -1) {
           // move vers la planète cible
-          move(collector->ship_id,
-               get_travel_angle(collector->x, collector->y, target->x,
-                                target->y),
+          move(collector.ship_id,
+               get_travel_angle(collector.x, collector.y, target->x, target->y),
                COLLECTORS_MAX_SPEED);
         } else {
-          retour_base(*collector, x_base, y_base);
+          retour_base(collector, x_base, y_base);
         }
       }
     }
