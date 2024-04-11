@@ -51,6 +51,7 @@ void explorerTask(void *argument) {
   Embedded_spaceship *embedded_collector;
   Spaceship collector;
   char radar_response[MAX_RESPONSE_SIZE];
+  uint8_t is_returning = 0;
   if (embedded_ship->spaceship->ship_id == 6) {
     embedded_collector = get_embedded_spaceship(0, 8, embedded_spaceships);
     osDelay(500); // Pour désynchroniser le scan des radars
@@ -64,11 +65,18 @@ void explorerTask(void *argument) {
                                       embedded_ship->index);
     collector = update_spaceship_mutex(collector, embedded_spaceships,
                                        embedded_collector->index);
-    radar(radar_response, explorer.ship_id);
-    parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
-                               &nb_spaceships, &x_base, &y_base);
-    move_spaceship_to(explorer, collector.x, collector.y, 1000);
-    osDelay(5000);
+    if (explorer.broken && !is_returning) {
+      move_spaceship_to(explorer, x_base, y_base, COLLECTORS_MAX_SPEED);
+      is_returning = 1;
+    } else if (!explorer.broken && is_returning) {
+      is_returning = 0;
+    } else {
+      radar(radar_response, explorer.ship_id);
+      parse_radar_response_mutex(radar_response, planets, &nb_planets,
+                                 spaceships, &nb_spaceships, &x_base, &y_base);
+      move_spaceship_to(explorer, collector.x, collector.y, 1000);
+    }
+    osDelay(1000);
   }
 }
 
