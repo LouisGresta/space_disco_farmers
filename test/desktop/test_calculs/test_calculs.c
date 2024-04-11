@@ -52,6 +52,20 @@ void test_determine_target_planets(void) {
   TEST_ASSERT_EQUAL_INT(
       3, results[1][1]); // Vérifie que le collecteur 2 cible la bonne planète
 }
+void test_determine_target_spaceship(void) {
+  Spaceship base_defender = {.team_id = 0, .ship_id = 8, .x = 10, .y = 10};
+  Spaceship all_spaceships[] = {
+      {.team_id = 0, .ship_id = 8, .x = 10, .y = 10},
+      {.team_id = 1, .ship_id = 9, .x = 20, .y = 20},
+      {.team_id = 4, .ship_id = 2, .x = 50, .y = 100}};
+
+  uint8_t nb_spaceships = 2;
+
+  Spaceship *ennemy_ship =
+      determine_target_spaceship(base_defender, all_spaceships, nb_spaceships);
+
+  TEST_ASSERT_EQUAL(&all_spaceships[1], ennemy_ship);
+}
 
 void test_get_angle_from_middle(void) {
   TEST_ASSERT_EQUAL(270, get_angle_from_middle(10000, 0));
@@ -88,5 +102,6 @@ int main(void) {
   RUN_TEST(test_determine_target_planets);
   RUN_TEST(test_get_angle_from_middle);
   RUN_TEST(test_determine_next_circle_point);
+  RUN_TEST(test_determine_target_spaceship);
   return UNITY_END();
 }

@@ -2,6 +2,14 @@
 #include "gameConstants.h"
 #include <stdlib.h>
 
+// Fonction calcul de distance
+
+float distance_calcul(float x1, float y1, float x2, float y2) {
+  float distance_x = x2 - x1;
+  float distance_y = y2 - y1;
+  return round(sqrt(pow(distance_x, 2) + pow(distance_y, 2)));
+}
+
 // fonction qui calcule l'angle à prendre pour aller d'un point A(X,Y) à un
 // point B(x,y)
 
@@ -50,11 +58,11 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
 
     if (!planets[i].saved) {
       // distance avec collecteur 1
-      uint16_t dist1 = round(sqrt(pow(abs(collector1.x - planets[i].x), 2) +
-                                  pow(abs(collector1.y - planets[i].y), 2)));
+      uint16_t dist1 = distance_calcul(collector1.x, collector1.y, planets[i].x,
+                                       planets[i].y);
       // distance avec collecteur 2
-      uint16_t dist2 = round(sqrt(pow(abs(collector2.x - planets[i].x), 2) +
-                                  pow(abs(collector2.y - planets[i].y), 2)));
+      uint16_t dist2 = distance_calcul(collector2.x, collector2.y, planets[i].x,
+                                       planets[i].y);
 
       // vérifier si la planète est la + proche de collector1
       if (dist1 < min_distance1) {
@@ -130,4 +138,20 @@ uint16_t determine_next_circle_point(uint16_t results[2], uint16_t angle_actuel,
 
   // Récupération de l'angle du prochain point
   return angle_actuel;
+}
+Spaceship *determine_target_spaceship(Spaceship our_ships,
+                                      Spaceship *ennemy_ships,
+                                      uint8_t nb_spaceships) {
+
+  for (uint8_t i = 0; i < nb_spaceships; i++) {
+
+    uint16_t distance_spaceship = distance_calcul(
+        our_ships.x, our_ships.y, ennemy_ships[i].x, ennemy_ships[i].y);
+
+    // vérifier si la planète est la + proche de collector1
+    if (distance_spaceship < FIRE_RANGE && ennemy_ships[i].team_id != 0) {
+      return &ennemy_ships[i];
+    }
+  }
+  return NULL;
 }

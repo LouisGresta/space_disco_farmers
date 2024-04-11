@@ -136,39 +136,62 @@ void baseDefenderTask(void *argument) {
   Spaceship base_defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint32_t startTime = osKernelGetTickCount(); // Temps de départ
-  int direction = 1; // 1 pour avancer, -1 pour reculer
-  int isVerticalMovementComplete =
-      0; // 0 pour mouvement vertical en cours, 1 pour terminé
+  int state = 0; // État du mouvement trapézoïdal
 
   while (1) {
     base_defender = update_spaceship_mutex(base_defender, embedded_spaceships,
                                            embedded_ship->index);
-    fire(base_defender.ship_id, 90);
+    Spaceship *ennemy_ship =
+        determine_target_spaceship(base_defender, spaceships, nb_spaceships);
+
+    if (ennemy_ship == NULL) {
+
+      fire(base_defender.ship_id, 90);
+    } else {
+      int a = get_travel_angle(base_defender.x, base_defender.y, ennemy_ship->x,
+                               ennemy_ship->y);
+      fire(base_defender.ship_id, a);
+    }
 
     uint32_t elapsedTime = osKernelGetTickCount() - startTime;
 
-    if (!isVerticalMovementComplete) {
-      if (elapsedTime < 2500) { // Durée du mouvement vertical en millisecondes
-                                // (par exemple, 5000 pour 5 secondes)
-        move(
-            base_defender.ship_id, 90,
-            1000); // Déplacer verticalement (exemple : angle 90, durée 1000 ms)
+    if (state == 0) {
+      // Mouvement vers l'avant
+      if (elapsedTime < 4000) {
+        move(base_defender.ship_id, 0,
+             ATTACKERS_MAX_SPEED); // Avancer à la vitesse maximale
       } else {
-        isVerticalMovementComplete = 1; // Le mouvement vertical est terminé
         startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
+        state = 1;                          // Changer d'état
       }
-    } else {
-      if (elapsedTime <
-          10000) { // Temps total du parcours horizontal en millisecondes (par
-                   // exemple, 10000 pour 10 secondes)
-        if (direction == 1) {
-          move(base_defender.ship_id, 0, 2000); // Avancer
-        } else {
-          move(base_defender.ship_id, 180, 2000); // Reculer
-        }
+    } else if (state == 1) {
+      // Mouvement circulaire
+      if (elapsedTime < 2000) {
+        move(base_defender.ship_id, 60,
+             1500); // Déplacer en arc de cercle avec un angle de 45 degrés et
+                    // une vitesse réduite
       } else {
         startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
-        direction = -direction;             // Inverser la direction
+        state = 2;                          // Changer d'état
+      }
+    } else if (state == 2) {
+      // Mouvement vers l'arrière
+      if (elapsedTime < 6000) {
+        move(base_defender.ship_id, 180,
+             ATTACKERS_MAX_SPEED); // Reculer à la vitesse maximale
+      } else {
+        startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
+        state = 3;                          // Changer d'état
+      }
+    } else if (state == 3) {
+      // Mouvement circulaire
+      if (elapsedTime < 3000) {
+        move(base_defender.ship_id, 315,
+             1500); // Déplacer en arc de cercle avec un angle de 225 degrés et
+                    // une vitesse réduite
+      } else {
+        startTime = osKernelGetTickCount(); // Réinitialiser le temps de départ
+        state = 0;                          // Revenir à l'état initial
       }
     }
 
