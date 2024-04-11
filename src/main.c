@@ -93,10 +93,18 @@ void attackerTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship attacker =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
-
+  uint8_t is_returning = 0;
   while (1) {
     attacker = update_spaceship_mutex(attacker, embedded_spaceships,
                                       embedded_ship->index);
+    if (attacker.broken && !is_returning) {
+      move_spaceship_to(attacker, x_base, y_base, COLLECTORS_MAX_SPEED);
+      is_returning = 1;
+    } else if (!attacker.broken && is_returning) {
+      is_returning = 0;
+    } else {
+      // TODO : implement the attacker logic
+    }
     osDelay(1000);
   }
 }
@@ -106,9 +114,18 @@ void defenderTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  uint8_t is_returning = 0;
   while (1) {
     defender = update_spaceship_mutex(defender, embedded_spaceships,
                                       embedded_ship->index);
+    if (defender.broken && !is_returning) {
+      move_spaceship_to(defender, x_base, y_base, COLLECTORS_MAX_SPEED);
+      is_returning = 1;
+    } else if (!defender.broken && is_returning) {
+      is_returning = 0;
+    } else {
+      // TODO: implement the defender logic
+    }
     osDelay(1000);
   }
 }
