@@ -61,16 +61,20 @@ void explorerTask(void *argument) {
   collector =
       get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   while (1) {
+    // update spaceships
     explorer = update_spaceship_mutex(explorer, embedded_spaceships,
                                       embedded_ship->index);
     collector = update_spaceship_mutex(collector, embedded_spaceships,
                                        embedded_collector->index);
+    // if broken go back to base
     if (explorer.broken && !is_returning) {
-      move_spaceship_to(explorer, x_base, y_base, COLLECTORS_MAX_SPEED);
+      move_spaceship_to(explorer, x_base, y_base, EXPLORERS_MAX_SPEED);
       is_returning = 1;
     } else if (!explorer.broken && is_returning) {
       is_returning = 0;
-    } else {
+    }
+    // if not broken do the logic
+    if (!explorer.broken) {
       radar(radar_response, explorer.ship_id);
       parse_radar_response_mutex(radar_response, planets, &nb_planets,
                                  spaceships, &nb_spaceships, &x_base, &y_base);
@@ -96,14 +100,18 @@ void attackerTask(void *argument) {
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint8_t is_returning = 0;
   while (1) {
+    // update spaceship
     attacker = update_spaceship_mutex(attacker, embedded_spaceships,
                                       embedded_ship->index);
+    // if broken go back to base
     if (attacker.broken && !is_returning) {
       move_spaceship_to(attacker, x_base, y_base, COLLECTORS_MAX_SPEED);
       is_returning = 1;
     } else if (!attacker.broken && is_returning) {
       is_returning = 0;
-    } else {
+    }
+    // if not broken do the logic
+    if (!attacker.broken) {
       // TODO : implement the attacker logic
     }
     osDelay(1000);
@@ -127,16 +135,20 @@ void defenderTask(void *argument) {
   uint8_t is_returning = 0;
   uint16_t fire_angle = NOT_FOUND;
   while (1) {
+    // update spaceships
     defender = update_spaceship_mutex(defender, embedded_spaceships,
                                       embedded_ship->index);
     collector = update_spaceship_mutex(collector, embedded_spaceships,
                                        embedded_collector->index);
+    // if broken go back to base
     if (defender.broken && !is_returning) {
       move_spaceship_to(defender, x_base, y_base, COLLECTORS_MAX_SPEED);
       is_returning = 1;
     } else if (!defender.broken && is_returning) {
       is_returning = 0;
-    } else {
+    }
+    // if not broken do the logic
+    if (!defender.broken) {
       // follow the collector
       move_spaceship_to(defender, collector.x, collector.y,
                         ATTACKERS_MAX_SPEED);
@@ -212,7 +224,6 @@ void baseDefenderTask(void *argument) {
         state = 0;                          // Revenir à l'état initial
       }
     }
-
     osDelay(1000);
   }
 }
