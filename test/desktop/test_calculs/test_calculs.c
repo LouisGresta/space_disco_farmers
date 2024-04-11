@@ -54,15 +54,17 @@ void test_determine_target_planets(void) {
 }
 void test_determine_target_spaceship(void) {
   Spaceship base_defender = {.team_id = 0, .ship_id = 8, .x = 10, .y = 10};
-  Spaceship ennemies[] = {{.team_id = 1, .ship_id = 9, .x = 20, .y = 20},
-                          {.ship_id = 2, .x = 50, .y = 100}};
+  Spaceship all_spaceships[] = {
+      {.team_id = 0, .ship_id = 8, .x = 10, .y = 10},
+      {.team_id = 1, .ship_id = 9, .x = 20, .y = 20},
+      {.team_id = 4, .ship_id = 2, .x = 50, .y = 100}};
 
   uint8_t nb_spaceships = 2;
 
   Spaceship *ennemy_ship =
-      determine_target_spaceship(base_defender, ennemies, nb_spaceships);
+      determine_target_spaceship(base_defender, all_spaceships, nb_spaceships);
 
-  TEST_ASSERT_EQUAL(&ennemies[0], ennemy_ship);
+  TEST_ASSERT_EQUAL(&all_spaceships[1], ennemy_ship);
 }
 
 void test_get_angle_from_middle(void) {
