@@ -74,7 +74,8 @@ void explorerTask(void *argument) {
       radar(radar_response, explorer.ship_id);
       parse_radar_response_mutex(radar_response, planets, &nb_planets,
                                  spaceships, &nb_spaceships, &x_base, &y_base);
-      move_spaceship_to(explorer, collector.x, collector.y, 1000);
+      move_spaceship_to(explorer, collector.x, collector.y,
+                        EXPLORERS_MAX_SPEED);
     }
     osDelay(1000);
   }
@@ -109,22 +110,36 @@ void attackerTask(void *argument) {
   }
 }
 
-// get as argument the collector id to follow
+// collector defenders
 void defenderTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  Embedded_spaceship *embedded_collector;
+  Spaceship collector;
+  if (embedded_ship->spaceship->ship_id == 4) {
+    embedded_collector = get_embedded_spaceship(0, 8, embedded_spaceships);
+  } else {
+    embedded_collector = get_embedded_spaceship(0, 9, embedded_spaceships);
+  }
+  collector =
+      get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   uint8_t is_returning = 0;
   while (1) {
     defender = update_spaceship_mutex(defender, embedded_spaceships,
                                       embedded_ship->index);
+    collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                       embedded_collector->index);
     if (defender.broken && !is_returning) {
       move_spaceship_to(defender, x_base, y_base, COLLECTORS_MAX_SPEED);
       is_returning = 1;
     } else if (!defender.broken && is_returning) {
       is_returning = 0;
     } else {
-      // TODO: implement the defender logic
+      // follow the collector
+      move_spaceship_to(defender, collector.x, collector.y,
+                        ATTACKERS_MAX_SPEED);
+      // TODO : verify ennemies near defender and fire at the good angle
     }
     osDelay(1000);
   }
