@@ -92,15 +92,11 @@ void explorerTask(void *argument) {
 
 // collectors
 void collectorsTask(void *argument) {
+  Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   // Spaceship *collector = (Spaceship *)argument;
   Planet *target;
-
-  Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship collector =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
-  collector = update_spaceship_mutex(collector, embedded_spaceships,
-                                     embedded_ship->index);
-
   // 8 est le collecteur principal qui récolte la data
   if (collector.ship_id == 8) {
     Embedded_spaceship *embedded_collector2;
@@ -332,14 +328,14 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  if ((collector1TaskHandle =
-           osThreadNew(collectorsTask, get_spaceship(0, 8, spaceships),
-                       &collectorsTask_attributes)) == NULL) {
+  if ((collector1TaskHandle = osThreadNew(
+           collectorsTask, get_embedded_spaceship(0, 8, embedded_spaceships),
+           &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
-  if ((collector2TaskHandle =
-           osThreadNew(collectorsTask, get_spaceship(0, 9, spaceships),
-                       &collectorsTask_attributes)) == NULL) {
+  if ((collector2TaskHandle = osThreadNew(
+           collectorsTask, get_embedded_spaceship(0, 9, embedded_spaceships),
+           &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
