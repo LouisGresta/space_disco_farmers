@@ -95,7 +95,7 @@ void explorerTask(void *argument) {
 // collectors
 void collectorsTask(void *argument) {
   Spaceship *collector = (Spaceship *)argument;
-  Planet *target = NULL;
+  Planet *target;
 
   // 8 est le collecteur principal qui récolte la data
   if (collector->ship_id == 8) {
@@ -107,7 +107,8 @@ void collectorsTask(void *argument) {
   while (1) {
 
     // l'action ne se fait que si le focus a été initialisé
-    if (memcmp(collector_focus, "\0\0\0\0", sizeof(collector_focus)) != 0) {
+    if (memcmp(collector_focus, (uint16_t[2][2]){{0, 0}, {0, 0}},
+               sizeof(collector_focus)) != 0) {
 
       if (collector_focus[0][0] == collector->ship_id) {
         // Récupération de la planète cible

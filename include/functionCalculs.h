@@ -15,6 +15,9 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
                               Planet *planets, uint8_t nb_planets,
                               uint16_t results[2][2]);
 
+uint16_t determine_target_planetV2(Spaceship collector, Planet *planets,
+                                   uint8_t nb_planets);
+
 uint16_t get_travel_angle(uint16_t start_x, uint16_t start_y, uint16_t end_x,
                           uint16_t end_y);
 
