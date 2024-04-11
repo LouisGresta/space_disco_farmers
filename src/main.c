@@ -96,22 +96,27 @@ void collectorsTask(void *argument) {
   Planet *target;
   Spaceship collector =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  Embedded_spaceship *embedded_collector2;
+  Spaceship collector2;
+
   // 8 est le collecteur principal qui récolte la data
   if (collector.ship_id == 8) {
-    Embedded_spaceship *embedded_collector2;
-    Spaceship collector2;
+
     embedded_collector2 = get_embedded_spaceship(0, 9, embedded_spaceships);
-    collector2 =
-        get_spaceship_mutex(embedded_spaceships, embedded_collector2->index);
-    get_mutex(planets_mutex_id);
-    determine_target_planets(collector, collector2, planets, nb_planets,
-                             collector_focus);
-    release_mutex(planets_mutex_id);
+    get_spaceship_mutex(embedded_spaceships, embedded_collector2->index);
   }
 
   while (1) {
     collector = update_spaceship_mutex(collector, embedded_spaceships,
                                        embedded_ship->index);
+    if (collector.ship_id == 8) {
+      collector2 = update_spaceship_mutex(collector2, embedded_spaceships,
+                                          embedded_ship->index);
+      get_mutex(planets_mutex_id);
+      determine_target_planets(collector, collector2, planets, nb_planets,
+                               collector_focus);
+      release_mutex(planets_mutex_id);
+    }
 
     // l'action ne se fait que si le focus a été initialisé
     if (memcmp(collector_focus, (uint16_t[2][2]){{0, 0}, {0, 0}},
