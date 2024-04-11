@@ -34,8 +34,6 @@ osMutexId_t planets_mutex_id;
 
 uint16_t collector_focus[2][2] = {{0, 0}, {0, 0}};
 
-uint16_t collector_focus[2][2] = {{0, 0}, {0, 0}};
-
 Planet planets[NB_MAX_PLANETS] = {0};
 uint16_t nb_planets = 0;
 Spaceship spaceships[NB_MAX_SPACESHIPS] = {0};
@@ -99,7 +97,7 @@ void collectorsTask(void *argument) {
 
   // 8 est le collecteur principal qui récolte la data
   if (collector->ship_id == 8) {
-    Spaceship *collector2 = get_spaceship(0, 9, spaceships, nb_spaceships);
+    Spaceship *collector2 = get_spaceship(0, 9, spaceships);
     determine_target_planets(*collector, *collector2, planets, nb_planets,
                              collector_focus);
   }
@@ -112,7 +110,7 @@ void collectorsTask(void *argument) {
 
       if (collector_focus[0][0] == collector->ship_id) {
         // Récupération de la planète cible
-        target = get_planet(collector_focus[0][1], planets, nb_planets);
+        target = get_planet(collector_focus[0][1], planets);
         if (collector->broken == 0 && target->ship_id == -1) {
 
           // move vers la planète cible
@@ -125,7 +123,7 @@ void collectorsTask(void *argument) {
         }
       } else if (collector_focus[1][0] == collector->ship_id) {
         // Récupération de la planète cible
-        target = get_planet(collector_focus[1][1], planets, nb_planets);
+        target = get_planet(collector_focus[1][1], planets);
         if (collector->broken == 0 && target->ship_id == -1) {
           // move vers la planète cible
           move(collector->ship_id,
@@ -323,14 +321,14 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  if ((collector1TaskHandle = osThreadNew(
-           collectorsTask, get_spaceship(0, 8, spaceships, nb_spaceships),
-           &collectorsTask_attributes)) == NULL) {
+  if ((collector1TaskHandle =
+           osThreadNew(collectorsTask, get_spaceship(0, 8, spaceships),
+                       &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
-  if ((collector2TaskHandle = osThreadNew(
-           collectorsTask, get_spaceship(0, 9, spaceships, nb_spaceships),
-           &collectorsTask_attributes)) == NULL) {
+  if ((collector2TaskHandle =
+           osThreadNew(collectorsTask, get_spaceship(0, 9, spaceships),
+                       &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
