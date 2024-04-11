@@ -5,6 +5,9 @@
 .pio
 unity-app
 
+# logs
+*.log
+
 # VSCode
 .vscode
 

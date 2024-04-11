@@ -15,8 +15,8 @@ void create_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,
   (*nb_planets)++;
 }
 
-Planet *get_planet(uint16_t planet_id, Planet *planets, uint16_t nb_planets) {
-  for (uint16_t i = 0; i < nb_planets; i++) {
+Planet *get_planet(uint16_t planet_id, Planet *planets) {
+  for (uint16_t i = 0; i < NB_MAX_PLANETS; i++) {
     if (planets[i].planet_id == planet_id) {
       return &planets[i];
     }
@@ -25,8 +25,8 @@ Planet *get_planet(uint16_t planet_id, Planet *planets, uint16_t nb_planets) {
 }
 
 void set_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,
-                uint8_t saved, Planet *planets, uint16_t nb_planets) {
-  Planet *planet = get_planet(planet_id, planets, nb_planets);
+                uint8_t saved, Planet *planets) {
+  Planet *planet = get_planet(planet_id, planets);
   if (planet == NULL)
     return;
   planet->x = x;
@@ -36,7 +36,7 @@ void set_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,
 }
 
 void delete_planet(uint16_t planet_id, Planet *planets, uint16_t *nb_planets) {
-  for (uint16_t i = 0; i < *nb_planets; i++) {
+  for (uint16_t i = 0; i < NB_MAX_PLANETS; i++) {
     if (planets[i].planet_id == planet_id) {
       planets[i].planet_id = 0;
       planets[i].x = 0;
@@ -50,7 +50,7 @@ void delete_planet(uint16_t planet_id, Planet *planets, uint16_t *nb_planets) {
 }
 
 void delete_all_planets(Planet *planets, uint16_t *nb_planets) {
-  for (uint16_t i = 0; i < *nb_planets; i++) {
+  for (uint16_t i = 0; i < NB_MAX_PLANETS; i++) {
     planets[i].planet_id = 0;
     planets[i].x = 0;
     planets[i].y = 0;
@@ -64,8 +64,9 @@ void planet_to_string(char *str, Planet planet) {
   sprintf(str, "Planet %d: x=%d, y=%d, ship_id=%d, saved=%d", planet.planet_id,
           planet.x, planet.y, planet.ship_id, planet.saved);
 }
-void planets_to_string(char *str, Planet *planets, uint16_t nb_planets) {
-  for (uint16_t i = 0; i < nb_planets; i++) {
+void planets_to_string(char *str, Planet *planets) {
+  str[0] = '\0';
+  for (uint16_t i = 0; i < NB_MAX_PLANETS; i++) {
     char planet_str[100];
     planet_to_string(planet_str, planets[i]);
     strcat(str, planet_str);

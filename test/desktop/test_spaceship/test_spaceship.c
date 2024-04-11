@@ -37,14 +37,14 @@ void test_create_spaceship(void) {
 
 void test_get_spaceship_null(void) {
   // Act
-  Spaceship *spaceship = get_spaceship(5, 1, spaceships, nb_spaceships);
+  Spaceship *spaceship = get_spaceship(5, 1, spaceships);
   // Assert
   TEST_ASSERT_NULL(spaceship);
 }
 
 void test_get_spaceship(void) {
   // Act
-  Spaceship *spaceship = get_spaceship(2, 4, spaceships, nb_spaceships);
+  Spaceship *spaceship = get_spaceship(2, 4, spaceships);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_spaceships);
   TEST_ASSERT_NOT_NULL(spaceship);
@@ -57,9 +57,9 @@ void test_get_spaceship(void) {
 
 void test_set_bad_spaceship(void) {
   // Act
-  set_spaceship(2, 5, 8000, 10000, 1, spaceships, nb_spaceships);
+  set_spaceship(2, 5, 8000, 10000, 1, spaceships);
   // Assert
-  Spaceship *spaceship = get_spaceship(2, 4, spaceships, nb_spaceships);
+  Spaceship *spaceship = get_spaceship(2, 4, spaceships);
   TEST_ASSERT_NOT_NULL(spaceship);
   TEST_ASSERT_EQUAL(9000, spaceship->x);
   TEST_ASSERT_EQUAL(11000, spaceship->y);
@@ -68,9 +68,9 @@ void test_set_bad_spaceship(void) {
 
 void test_set_spaceship(void) {
   // Act
-  set_spaceship(2, 4, 8000, 10000, 1, spaceships, nb_spaceships);
+  set_spaceship(2, 4, 8000, 10000, 1, spaceships);
   // Assert
-  Spaceship *spaceship = get_spaceship(2, 4, spaceships, nb_spaceships);
+  Spaceship *spaceship = get_spaceship(2, 4, spaceships);
   TEST_ASSERT_NOT_NULL(spaceship);
   TEST_ASSERT_EQUAL(8000, spaceship->x);
   TEST_ASSERT_EQUAL(10000, spaceship->y);

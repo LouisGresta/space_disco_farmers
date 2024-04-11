@@ -37,14 +37,14 @@ void test_create_planet(void) {
 
 void test_get_planet_null(void) {
   // Act
-  Planet *planet = get_planet(638, planets, nb_planets);
+  Planet *planet = get_planet(638, planets);
   // Assert
   TEST_ASSERT_NULL(planet);
 }
 
 void test_get_planet(void) {
   // Act
-  Planet *planet = get_planet(426, planets, nb_planets);
+  Planet *planet = get_planet(426, planets);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_planets);
   TEST_ASSERT_NOT_NULL(planet);
@@ -57,7 +57,7 @@ void test_get_planet(void) {
 
 void test_set_bad_planet(void) {
   // Act
-  set_planet(500, 8000, 10000, 6, 1, planets, nb_planets);
+  set_planet(500, 8000, 10000, 6, 1, planets);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_planets);
   TEST_ASSERT_EQUAL(352, planets[0].planet_id);
@@ -74,7 +74,7 @@ void test_set_bad_planet(void) {
 
 void test_set_planet(void) {
   // Act
-  set_planet(426, 9500, 12000, 2, 1, planets, nb_planets);
+  set_planet(426, 9500, 12000, 2, 1, planets);
   // Assert
   TEST_ASSERT_EQUAL(3, nb_planets);
   TEST_ASSERT_EQUAL(426, planets[1].planet_id);

@@ -46,6 +46,12 @@ uint8_t move_v_max(int8_t ship_id, uint16_t angle) {
   return move(ship_id, angle, speed);
 }
 
+uint8_t move_spaceship_to(Spaceship spaceship, uint16_t x, uint16_t y,
+                          uint16_t speed) {
+  uint16_t angle = get_travel_angle(spaceship.x, spaceship.y, x, y);
+  return move(spaceship.ship_id, angle, speed);
+}
+
 uint8_t fire(int8_t ship_id, uint16_t angle) {
   char response[5];
   get_mutex(serial_mutex_id);
@@ -69,10 +75,10 @@ void parse_radar_response_mutex(const char *response, Planet *planets,
                                 uint16_t *nb_planets, Spaceship *spaceships,
                                 uint16_t *nb_spaceships, uint16_t *x_base,
                                 uint16_t *y_base) {
-  get_mutex(planets_spceships_mutex_id);
+  get_mutex(planets_spaceships_mutex_id);
   parse_radar_response(response, planets, nb_planets, spaceships, nb_spaceships,
                        x_base, y_base);
-  release_mutex(planets_spceships_mutex_id);
+  release_mutex(planets_spaceships_mutex_id);
 }
 
 // fonction à call quand vaisseau détruit ou possède une planète
