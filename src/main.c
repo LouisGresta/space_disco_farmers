@@ -21,12 +21,12 @@ osThreadId_t defender2TaskHandle;
 
 const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
                                          NULL, 0U};
-const osMutexAttr_t planets_spaceships_mutex_attr = {
-    "planets_spaceshipsMutex", osMutexPrioInherit, NULL, 0U};
+const osMutexAttr_t spaceships_mutex_attr = {"spaceshipsMutex",
+                                             osMutexPrioInherit, NULL, 0U};
 const osMutexAttr_t planets_mutex_attr = {"planetsMutex", osMutexPrioInherit,
                                           NULL, 0U};
 osMutexId_t serial_mutex_id;
-osMutexId_t planets_spaceships_mutex_id;
+osMutexId_t spaceships_mutex_id;
 osMutexId_t planets_mutex_id;
 
 uint16_t collector_focus[2][2];
@@ -235,7 +235,7 @@ int main(void) {
   init_embedded_spaceships(embedded_spaceships, spaceships);
 
   serial_mutex_id = create_mutex(&serial_mutex_attr);
-  planets_spaceships_mutex_id = create_mutex(&planets_spaceships_mutex_attr);
+  spaceships_mutex_id = create_mutex(&spaceships_mutex_attr);
   planets_mutex_id = create_mutex(&planets_mutex_attr);
 #ifdef DEBUG_SERIAL
   while (!push_button_is_pressed()) {

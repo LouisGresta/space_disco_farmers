@@ -14,7 +14,9 @@ uint8_t move_spaceship_to(Spaceship spaceship, uint16_t x, uint16_t y,
 uint8_t fire(int8_t ship_id, uint16_t angle);
 void radar(char *response, int8_t ship_id);
 
-extern osMutexId_t planets_spaceships_mutex_id;
+extern osMutexId_t spaceships_mutex_id;
+extern osMutexId_t planets_mutex_id;
+
 // parse radar response using mutex
 void parse_radar_response_mutex(const char *response, Planet *planets,
                                 uint16_t *nb_planets, Spaceship *spaceships,

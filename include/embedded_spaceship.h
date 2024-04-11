@@ -5,7 +5,7 @@
 #include "spaceship.h"
 #include <stdint.h>
 
-extern osMutexId_t planets_spaceships_mutex_id;
+extern osMutexId_t spaceships_mutex_id;
 
 struct Embedded_spaceship_t {
   Spaceship *spaceship;
