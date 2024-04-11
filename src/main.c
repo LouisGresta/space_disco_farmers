@@ -93,7 +93,6 @@ void explorerTask(void *argument) {
 // collectors
 void collectorsTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
-  // Spaceship *collector = (Spaceship *)argument;
   Planet *target;
   Spaceship collector =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
@@ -104,9 +103,10 @@ void collectorsTask(void *argument) {
     embedded_collector2 = get_embedded_spaceship(0, 9, embedded_spaceships);
     collector2 =
         get_spaceship_mutex(embedded_spaceships, embedded_collector2->index);
-    // Spaceship collector2 = get_spaceship(0, 9, spaceships);
+    get_mutex(planets_mutex_id);
     determine_target_planets(collector, collector2, planets, nb_planets,
                              collector_focus);
+    release_mutex(planets_mutex_id);
   }
 
   while (1) {
@@ -119,7 +119,9 @@ void collectorsTask(void *argument) {
 
       if (collector_focus[0][0] == collector.ship_id) {
         // Récupération de la planète cible
+        get_mutex(planets_mutex_id);
         target = get_planet(collector_focus[0][1], planets);
+        release_mutex(planets_mutex_id);
         if (collector.broken == 0 && target->ship_id == -1) {
 
           // move vers la planète cible
@@ -131,7 +133,9 @@ void collectorsTask(void *argument) {
         }
       } else if (collector_focus[1][0] == collector.ship_id) {
         // Récupération de la planète cible
+        get_mutex(planets_mutex_id);
         target = get_planet(collector_focus[1][1], planets);
+        release_mutex(planets_mutex_id);
         if (collector.broken == 0 && target->ship_id == -1) {
           // move vers la planète cible
           move(collector.ship_id,
@@ -339,37 +343,37 @@ int main(void) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
-  const osThreadAttr_t attackersTask_attributes = {
-      .name = "attackersTask",
-      .priority = (osPriority_t)osPriorityAboveNormal,
-      .stack_size = 1024,
-  };
-  if ((attacker1TaskHandle = osThreadNew(
-           attackerTask, get_embedded_spaceship(0, 1, embedded_spaceships),
-           &attackersTask_attributes)) == NULL) {
-    // Erreur lors de la création de la tache des attaquants\n");
-  }
-  if ((attacker2TaskHandle = osThreadNew(
-           attackerTask, get_embedded_spaceship(0, 2, embedded_spaceships),
-           &attackersTask_attributes)) == NULL) {
-    // Erreur lors de la création de la tache des attaquants
-  }
+  // const osThreadAttr_t attackersTask_attributes = {
+  //     .name = "attackersTask",
+  //     .priority = (osPriority_t)osPriorityAboveNormal,
+  //     .stack_size = 1024,
+  // };
+  // if ((attacker1TaskHandle = osThreadNew(
+  //          attackerTask, get_embedded_spaceship(0, 1, embedded_spaceships),
+  //          &attackersTask_attributes)) == NULL) {
+  //   // Erreur lors de la création de la tache des attaquants\n");
+  // }
+  // if ((attacker2TaskHandle = osThreadNew(
+  //          attackerTask, get_embedded_spaceship(0, 2, embedded_spaceships),
+  //          &attackersTask_attributes)) == NULL) {
+  //   // Erreur lors de la création de la tache des attaquants
+  // }
 
-  if ((baseDefenderTaskHandle = osThreadNew(
-           baseDefenderTask, get_embedded_spaceship(0, 3, embedded_spaceships),
-           &attackersTask_attributes)) == NULL) {
-    // Erreur lors de la création de la tache du défenseur de base
-  }
-  if ((defender1TaskHandle = osThreadNew(
-           defenderTask, get_embedded_spaceship(0, 4, embedded_spaceships),
-           &attackersTask_attributes)) == NULL) {
-    // Erreur lors de la création de la tache du premier défenseur
-  }
-  if ((defender2TaskHandle = osThreadNew(
-           defenderTask, get_embedded_spaceship(0, 5, embedded_spaceships),
-           &attackersTask_attributes)) == NULL) {
-    // Erreur lors de la création de la tache du deuxième défenseur
-  }
+  // if ((baseDefenderTaskHandle = osThreadNew(
+  //          baseDefenderTask, get_embedded_spaceship(0, 3,
+  //          embedded_spaceships), &attackersTask_attributes)) == NULL) {
+  //   // Erreur lors de la création de la tache du défenseur de base
+  // }
+  // if ((defender1TaskHandle = osThreadNew(
+  //          defenderTask, get_embedded_spaceship(0, 4, embedded_spaceships),
+  //          &attackersTask_attributes)) == NULL) {
+  //   // Erreur lors de la création de la tache du premier défenseur
+  // }
+  // if ((defender2TaskHandle = osThreadNew(
+  //          defenderTask, get_embedded_spaceship(0, 5, embedded_spaceships),
+  //          &attackersTask_attributes)) == NULL) {
+  //   // Erreur lors de la création de la tache du deuxième défenseur
+  // }
 
   // démarrage du noyau
   osKernelStart();
