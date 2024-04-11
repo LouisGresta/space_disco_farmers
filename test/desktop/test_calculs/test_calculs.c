@@ -53,7 +53,7 @@ void test_determine_target_planets(void) {
       3, results[1][1]); // Vérifie que le collecteur 2 cible la bonne planète
 }
 void test_determine_target_spaceship(void) {
-  Spaceship bas_defender = {.ship_id = 8, .x = 10, .y = 10};
+  Spaceship base_defender = {.ship_id = 8, .x = 10, .y = 10};
   Spaceship ennemies[] = {{.ship_id = 9, .x = 20, .y = 20},
                           {.ship_id = 2, .x = 50, .y = 100}};
 
