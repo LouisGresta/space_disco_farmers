@@ -74,11 +74,11 @@ void radar(char *response, int8_t ship_id) {
 void parse_radar_response_mutex(const char *response, Planet *planets,
                                 uint16_t *nb_planets, Spaceship *spaceships,
                                 uint16_t *nb_spaceships, uint16_t *x_base,
-                                uint16_t *y_base) {
+                                uint16_t *y_base, uint8_t update_base) {
   get_mutex(spaceships_mutex_id);
   get_mutex(planets_mutex_id);
   parse_radar_response(response, planets, nb_planets, spaceships, nb_spaceships,
-                       x_base, y_base);
+                       x_base, y_base, update_base);
   release_mutex(planets_mutex_id);
   release_mutex(spaceships_mutex_id);
 }

@@ -21,6 +21,6 @@ extern osMutexId_t planets_mutex_id;
 void parse_radar_response_mutex(const char *response, Planet *planets,
                                 uint16_t *nb_planets, Spaceship *spaceships,
                                 uint16_t *nb_spaceships, uint16_t *x_base,
-                                uint16_t *y_base);
+                                uint16_t *y_base, uint8_t update_base);
 
 #endif // EMBEDDED_COMMANDS_H
