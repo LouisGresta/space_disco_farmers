@@ -86,8 +86,8 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
 
 // Version de la fonction du dessus mais qui ne calcule que pour 1 seul vaisseau
 //  Car on a ajouté l'atribut "focus" sur les planètes
-uint16_t determine_target_planetV2(Spaceship collector, Planet *planets,
-                                   uint8_t nb_planets) {
+Planet determine_target_planetV2(Spaceship collector, Planet *planets,
+                                 uint8_t nb_planets) {
 
   uint16_t min_distance = AREA_LENGTH;
   uint8_t index_planet = 0;
@@ -106,8 +106,8 @@ uint16_t determine_target_planetV2(Spaceship collector, Planet *planets,
       }
     }
   }
-
-  return planets[index_planet].planet_id;
+  planets[index_planet].focus = collector.ship_id;
+  return planets[index_planet];
 }
 
 // retourne l'angle de la base par rapport au centre

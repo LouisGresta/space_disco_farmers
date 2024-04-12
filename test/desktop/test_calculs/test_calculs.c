@@ -78,17 +78,16 @@ void test_determine_target_planetsV2(void) {
                          {.planet_id = 2, .x = 16, .y = 16, .saved = 0},
                          {.planet_id = 3, .x = 25, .y = 25, .saved = 0}};
   uint8_t nb_planets = 3;
-
-  TEST_ASSERT_EQUAL(
-      1, determine_target_planetV2(collector1, planets_1, nb_planets));
+  Planet result = determine_target_planetV2(collector1, planets_1, nb_planets);
+  TEST_ASSERT_EQUAL_INT(1, result.planet_id);
   collector1.x = 17;
   collector1.y = 21;
-  TEST_ASSERT_EQUAL(
-      2, determine_target_planetV2(collector1, planets_1, nb_planets));
+  result = determine_target_planetV2(collector1, planets_1, nb_planets);
+  TEST_ASSERT_EQUAL_INT(2, result.planet_id);
   collector1.x = 50;
   collector1.y = 71;
-  TEST_ASSERT_EQUAL(
-      3, determine_target_planetV2(collector1, planets_1, nb_planets));
+  result = determine_target_planetV2(collector1, planets_1, nb_planets);
+  TEST_ASSERT_EQUAL_INT(3, result.planet_id);
 }
 
 void test_get_angle_from_middle(void) {
