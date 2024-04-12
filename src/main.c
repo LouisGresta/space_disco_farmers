@@ -108,10 +108,8 @@ void collectorsTask(void *argument) {
     if (!collector.broken && target_planet.ship_id == -1) {
 
       // move vers la planète cible
-      move(collector.ship_id,
-           get_travel_angle(collector.x, collector.y, target_planet.x,
-                            target_planet.y),
-           COLLECTORS_MAX_SPEED);
+      move_spaceship_to(collector, target_planet.x, target_planet.y,
+                        COLLECTORS_MAX_SPEED);
     } else {
       retour_base(collector, x_base, y_base);
     }
