@@ -1,5 +1,6 @@
 #include "main.h"
 #include "embedded_commands.h"
+#include "embedded_function_calcul.h"
 #include "embedded_spaceship.h"
 #include "functionCalculs.h"
 #include "gameConstants.h"
@@ -77,7 +78,8 @@ void explorerTask(void *argument) {
     if (!explorer.broken) {
       radar(radar_response, explorer.ship_id);
       parse_radar_response_mutex(radar_response, planets, &nb_planets,
-                                 spaceships, &nb_spaceships, &x_base, &y_base);
+                                 spaceships, &nb_spaceships, &x_base, &y_base,
+                                 0);
       move_spaceship_to(explorer, collector.x, collector.y,
                         EXPLORERS_MAX_SPEED);
     }
@@ -152,7 +154,7 @@ void defenderTask(void *argument) {
       // follow the collector
       move_spaceship_to(defender, collector.x, collector.y,
                         ATTACKERS_MAX_SPEED);
-      fire_angle = determine_target_spaceship_angle(defender, spaceships);
+      fire_angle = determine_target_spaceship_angle_mutex(defender, spaceships);
       if (fire_angle != NOT_FOUND) {
         fire(defender.ship_id, fire_angle);
       } else {
@@ -175,7 +177,8 @@ void baseDefenderTask(void *argument) {
   while (1) {
     base_defender = update_spaceship_mutex(base_defender, embedded_spaceships,
                                            embedded_ship->index);
-    fire_angle = determine_target_spaceship_angle(base_defender, spaceships);
+    fire_angle =
+        determine_target_spaceship_angle_mutex(base_defender, spaceships);
     if (fire_angle != NOT_FOUND) {
       fire(base_defender.ship_id, fire_angle);
     } else {
@@ -249,7 +252,7 @@ int main(void) {
   char radar_response[MAX_RESPONSE_SIZE];
   radar(radar_response, 6);
   parse_radar_response_mutex(radar_response, planets, &nb_planets, spaceships,
-                             &nb_spaceships, &x_base, &y_base);
+                             &nb_spaceships, &x_base, &y_base, 1);
   // explorers threads
   const osThreadAttr_t explorersTask_attributes = {
       .name = "explorersTask",

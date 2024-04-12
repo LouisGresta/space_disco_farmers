@@ -85,7 +85,7 @@ void parse_spaceship(char **params, Spaceship *spaceships,
 void parse_radar_response(const char *response, Planet *planets,
                           uint16_t *nb_planets, Spaceship *spaceships,
                           uint16_t *nb_spaceships, uint16_t *x_base,
-                          uint16_t *y_base) {
+                          uint16_t *y_base, uint8_t update_base) {
   uint16_t count;
   char *str_scan[NB_MAX_PLANETS + NB_MAX_SPACESHIPS + 1];
   split(str_scan, response, ',', &count);
@@ -97,7 +97,7 @@ void parse_radar_response(const char *response, Planet *planets,
       parse_planet(params, planets, nb_planets);
     } else if (params[0][0] == SPACESHIP) {
       parse_spaceship(params, spaceships, nb_spaceships);
-    } else if (params[0][0] == BASE) {
+    } else if (params[0][0] == BASE && update_base) {
       *x_base = atoi(params[1]);
       *y_base = atoi(params[2]);
     }

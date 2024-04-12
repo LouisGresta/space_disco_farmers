@@ -17,5 +17,5 @@ void split(char **tokens, const char *str, const char delimiter,
 void parse_radar_response(const char *response, Planet *planets,
                           uint16_t *nb_planets, Spaceship *spaceships,
                           uint16_t *nb_spaceships, uint16_t *x_base,
-                          uint16_t *y_base);
+                          uint16_t *y_base, uint8_t update_base);
 #endif // COMMANDS_H
