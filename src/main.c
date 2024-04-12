@@ -21,12 +21,12 @@ osThreadId_t defender2TaskHandle;
 
 const osMutexAttr_t serial_mutex_attr = {"serialMutex", osMutexPrioInherit,
                                          NULL, 0U};
-const osMutexAttr_t planets_spaceships_mutex_attr = {
-    "planets_spaceshipsMutex", osMutexPrioInherit, NULL, 0U};
+const osMutexAttr_t spaceships_mutex_attr = {"spaceshipsMutex",
+                                             osMutexPrioInherit, NULL, 0U};
 const osMutexAttr_t planets_mutex_attr = {"planetsMutex", osMutexPrioInherit,
                                           NULL, 0U};
 osMutexId_t serial_mutex_id;
-osMutexId_t planets_spaceships_mutex_id;
+osMutexId_t spaceships_mutex_id;
 osMutexId_t planets_mutex_id;
 
 uint16_t collector_focus[2][2];
@@ -61,20 +61,25 @@ void explorerTask(void *argument) {
   collector =
       get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   while (1) {
+    // update spaceships
     explorer = update_spaceship_mutex(explorer, embedded_spaceships,
                                       embedded_ship->index);
     collector = update_spaceship_mutex(collector, embedded_spaceships,
                                        embedded_collector->index);
+    // if broken go back to base
     if (explorer.broken && !is_returning) {
-      move_spaceship_to(explorer, x_base, y_base, COLLECTORS_MAX_SPEED);
+      move_spaceship_to(explorer, x_base, y_base, EXPLORERS_MAX_SPEED);
       is_returning = 1;
     } else if (!explorer.broken && is_returning) {
       is_returning = 0;
-    } else {
+    }
+    // if not broken do the logic
+    if (!explorer.broken) {
       radar(radar_response, explorer.ship_id);
       parse_radar_response_mutex(radar_response, planets, &nb_planets,
                                  spaceships, &nb_spaceships, &x_base, &y_base);
-      move_spaceship_to(explorer, collector.x, collector.y, 1000);
+      move_spaceship_to(explorer, collector.x, collector.y,
+                        EXPLORERS_MAX_SPEED);
     }
     osDelay(1000);
   }
@@ -95,36 +100,65 @@ void attackerTask(void *argument) {
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint8_t is_returning = 0;
   while (1) {
+    // update spaceship
     attacker = update_spaceship_mutex(attacker, embedded_spaceships,
                                       embedded_ship->index);
+    // if broken go back to base
     if (attacker.broken && !is_returning) {
       move_spaceship_to(attacker, x_base, y_base, COLLECTORS_MAX_SPEED);
       is_returning = 1;
     } else if (!attacker.broken && is_returning) {
       is_returning = 0;
-    } else {
+    }
+    // if not broken do the logic
+    if (!attacker.broken) {
       // TODO : implement the attacker logic
     }
     osDelay(1000);
   }
 }
 
-// get as argument the collector id to follow
+// collector defenders
 void defenderTask(void *argument) {
   Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
   Spaceship defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+  Embedded_spaceship *embedded_collector;
+  Spaceship collector;
+  if (embedded_ship->spaceship->ship_id == 4) {
+    embedded_collector = get_embedded_spaceship(0, 8, embedded_spaceships);
+  } else {
+    embedded_collector = get_embedded_spaceship(0, 9, embedded_spaceships);
+  }
+  collector =
+      get_spaceship_mutex(embedded_spaceships, embedded_collector->index);
   uint8_t is_returning = 0;
+  uint16_t fire_angle = NOT_FOUND;
   while (1) {
+    // update spaceships
     defender = update_spaceship_mutex(defender, embedded_spaceships,
                                       embedded_ship->index);
+    collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                       embedded_collector->index);
+    // if broken go back to base
     if (defender.broken && !is_returning) {
       move_spaceship_to(defender, x_base, y_base, COLLECTORS_MAX_SPEED);
       is_returning = 1;
     } else if (!defender.broken && is_returning) {
       is_returning = 0;
-    } else {
-      // TODO: implement the defender logic
+    }
+    // if not broken do the logic
+    if (!defender.broken) {
+      // follow the collector
+      move_spaceship_to(defender, collector.x, collector.y,
+                        ATTACKERS_MAX_SPEED);
+      fire_angle = determine_target_spaceship_angle(defender, spaceships);
+      if (fire_angle != NOT_FOUND) {
+        fire(defender.ship_id, fire_angle);
+      } else {
+        fire(defender.ship_id,
+             (get_angle_from_middle(x_base, y_base) + 180) % 360);
+      }
     }
     osDelay(1000);
   }
@@ -136,21 +170,17 @@ void baseDefenderTask(void *argument) {
   Spaceship base_defender =
       get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
   uint32_t startTime = osKernelGetTickCount(); // Temps de départ
-  int state = 0; // État du mouvement trapézoïdal
-
+  uint8_t state = 0; // État du mouvement trapézoïdal
+  uint16_t fire_angle = NOT_FOUND;
   while (1) {
     base_defender = update_spaceship_mutex(base_defender, embedded_spaceships,
                                            embedded_ship->index);
-    Spaceship *ennemy_ship =
-        determine_target_spaceship(base_defender, spaceships, nb_spaceships);
-
-    if (ennemy_ship == NULL) {
-
-      fire(base_defender.ship_id, 90);
+    fire_angle = determine_target_spaceship_angle(base_defender, spaceships);
+    if (fire_angle != NOT_FOUND) {
+      fire(base_defender.ship_id, fire_angle);
     } else {
-      int a = get_travel_angle(base_defender.x, base_defender.y, ennemy_ship->x,
-                               ennemy_ship->y);
-      fire(base_defender.ship_id, a);
+      fire(base_defender.ship_id,
+           (get_angle_from_middle(x_base, y_base) + 180) % 360);
     }
 
     uint32_t elapsedTime = osKernelGetTickCount() - startTime;
@@ -194,7 +224,6 @@ void baseDefenderTask(void *argument) {
         state = 0;                          // Revenir à l'état initial
       }
     }
-
     osDelay(1000);
   }
 }
@@ -206,7 +235,7 @@ int main(void) {
   init_embedded_spaceships(embedded_spaceships, spaceships);
 
   serial_mutex_id = create_mutex(&serial_mutex_attr);
-  planets_spaceships_mutex_id = create_mutex(&planets_spaceships_mutex_attr);
+  spaceships_mutex_id = create_mutex(&spaceships_mutex_attr);
   planets_mutex_id = create_mutex(&planets_mutex_attr);
 #ifdef DEBUG_SERIAL
   while (!push_button_is_pressed()) {

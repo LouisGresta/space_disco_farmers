@@ -41,7 +41,7 @@ Spaceship get_spaceship_mutex(Embedded_spaceship *embedded_spaceships,
 Spaceship update_spaceship_mutex(Spaceship spaceship,
                                  Embedded_spaceship *embedded_spaceships,
                                  uint8_t index) {
-  if (osMutexGetOwner(planets_spaceships_mutex_id) != NULL) {
+  if (osMutexGetOwner(spaceships_mutex_id) != NULL) {
     return spaceship;
   }
   return get_spaceship_mutex(embedded_spaceships, index);
