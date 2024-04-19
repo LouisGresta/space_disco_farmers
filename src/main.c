@@ -310,37 +310,37 @@ int main(void) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
-  // const osThreadAttr_t attackersTask_attributes = {
-  //     .name = "attackersTask",
-  //     .priority = (osPriority_t)osPriorityAboveNormal,
-  //     .stack_size = 1024,
-  // };
-  // if ((attacker1TaskHandle = osThreadNew(
-  //          attackerTask, get_embedded_spaceship(0, 1, embedded_spaceships),
-  //          &attackersTask_attributes)) == NULL) {
-  //   // Erreur lors de la création de la tache des attaquants\n");
-  // }
-  // if ((attacker2TaskHandle = osThreadNew(
-  //          attackerTask, get_embedded_spaceship(0, 2, embedded_spaceships),
-  //          &attackersTask_attributes)) == NULL) {
-  //   // Erreur lors de la création de la tache des attaquants
-  // }
+  const osThreadAttr_t attackersTask_attributes = {
+      .name = "attackersTask",
+      .priority = (osPriority_t)osPriorityAboveNormal,
+      .stack_size = 1024,
+  };
+  if ((attacker1TaskHandle = osThreadNew(
+           attackerTask, get_embedded_spaceship(0, 1, embedded_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache des attaquants\n");
+  }
+  if ((attacker2TaskHandle = osThreadNew(
+           attackerTask, get_embedded_spaceship(0, 2, embedded_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache des attaquants
+  }
 
-  // if ((baseDefenderTaskHandle = osThreadNew(
-  //          baseDefenderTask, get_embedded_spaceship(0, 3,
-  //          embedded_spaceships), &attackersTask_attributes)) == NULL) {
-  //   // Erreur lors de la création de la tache du défenseur de base
-  // }
-  // if ((defender1TaskHandle = osThreadNew(
-  //          defenderTask, get_embedded_spaceship(0, 4, embedded_spaceships),
-  //          &attackersTask_attributes)) == NULL) {
-  //   // Erreur lors de la création de la tache du premier défenseur
-  // }
-  // if ((defender2TaskHandle = osThreadNew(
-  //          defenderTask, get_embedded_spaceship(0, 5, embedded_spaceships),
-  //          &attackersTask_attributes)) == NULL) {
-  //   // Erreur lors de la création de la tache du deuxième défenseur
-  // }
+  if ((baseDefenderTaskHandle = osThreadNew(
+           baseDefenderTask, get_embedded_spaceship(0, 3, embedded_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du défenseur de base
+  }
+  if ((defender1TaskHandle = osThreadNew(
+           defenderTask, get_embedded_spaceship(0, 4, embedded_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du premier défenseur
+  }
+  if ((defender2TaskHandle = osThreadNew(
+           defenderTask, get_embedded_spaceship(0, 5, embedded_spaceships),
+           &attackersTask_attributes)) == NULL) {
+    // Erreur lors de la création de la tache du deuxième défenseur
+  }
 
   // démarrage du noyau
   osKernelStart();
