@@ -51,8 +51,8 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   // Variables pour stocker les distances minimales et les indices des planètes
   uint16_t min_distance1 = AREA_LENGTH;
   uint16_t min_distance2 = AREA_LENGTH;
-  uint8_t index_planet1;
-  uint8_t index_planet2;
+  uint8_t index_planet1 = 0;
+  uint8_t index_planet2 = 0;
 
   for (uint8_t i = 0; i < nb_planets; i++) {
 
@@ -82,6 +82,32 @@ void determine_target_planets(Spaceship collector1, Spaceship collector2,
   // Affectation des planètes cibles aux vaisseaux
   results[0][1] = planets[index_planet1].planet_id;
   results[1][1] = planets[index_planet2].planet_id;
+}
+
+// Version de la fonction du dessus mais qui ne calcule que pour 1 seul vaisseau
+//  Car on a ajouté l'atribut "focus" sur les planètes
+Planet determine_target_planetV2(Spaceship collector, Planet *planets,
+                                 uint8_t nb_planets) {
+
+  uint16_t min_distance = AREA_LENGTH;
+  uint8_t index_planet = 0;
+  for (uint8_t i = 0; i < nb_planets; i++) {
+
+    if (!planets[i].saved &&
+        (planets[i].focus == collector.ship_id || planets[i].focus == 0)) {
+      // distance avec collecteur
+      uint16_t dist =
+          distance_calcul(collector.x, collector.y, planets[i].x, planets[i].y);
+
+      // vérifier si la planète est la + proche de collector1
+      if (dist < min_distance) {
+        min_distance = dist;
+        index_planet = i;
+      }
+    }
+  }
+  planets[index_planet].focus = collector.ship_id;
+  return planets[index_planet];
 }
 
 // retourne l'angle de la base par rapport au centre

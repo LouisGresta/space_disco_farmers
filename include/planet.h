@@ -10,6 +10,7 @@ struct Planet_t {
   uint16_t y;
   int8_t ship_id;
   uint8_t saved;
+  int8_t focus; // id du collecteur ou 0 si rien
 } typedef Planet;
 
 void create_planet(uint16_t planet_id, uint16_t x, uint16_t y, int8_t ship_id,

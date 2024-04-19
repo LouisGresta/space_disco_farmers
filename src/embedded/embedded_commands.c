@@ -84,8 +84,8 @@ void parse_radar_response_mutex(const char *response, Planet *planets,
 }
 
 // fonction à call quand vaisseau détruit ou possède une planète
-void retour_base(Spaceship ship) {
+void retour_base(Spaceship ship, uint16_t x_base, uint16_t y_base) {
 
-  uint16_t angle = get_travel_angle(ship.x, ship.y, base_x, base_y);
+  uint16_t angle = get_travel_angle(ship.x, ship.y, x_base, y_base);
   move_v_max(ship.ship_id, angle);
 }

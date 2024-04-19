@@ -6,6 +6,7 @@
 #include "gameConstants.h"
 #include "os_utils.h"
 #include <stdlib.h>
+#include <string.h>
 
 // #define DEBUG_SERIAL 1
 
@@ -13,7 +14,8 @@
 
 osThreadId_t explorer1TaskHandle;
 osThreadId_t explorer2TaskHandle;
-osThreadId_t collectorsTaskHandle;
+osThreadId_t collector1TaskHandle;
+osThreadId_t collector2TaskHandle;
 osThreadId_t attacker1TaskHandle;
 osThreadId_t attacker2TaskHandle;
 osThreadId_t baseDefenderTaskHandle;
@@ -30,7 +32,6 @@ osMutexId_t serial_mutex_id;
 osMutexId_t spaceships_mutex_id;
 osMutexId_t planets_mutex_id;
 
-uint16_t collector_focus[2][2];
 Planet planets[NB_MAX_PLANETS] = {0};
 uint16_t nb_planets = 0;
 Spaceship spaceships[NB_MAX_SPACESHIPS] = {0};
@@ -89,9 +90,31 @@ void explorerTask(void *argument) {
 
 // collectors
 void collectorsTask(void *argument) {
+  Embedded_spaceship *embedded_ship = (Embedded_spaceship *)argument;
+
+  Spaceship collector =
+      get_spaceship_mutex(embedded_spaceships, embedded_ship->index);
+
+  Planet target_planet;
+
   while (1) {
-    move(8, 90, 1000);
-    osDelay(1000);
+    collector = update_spaceship_mutex(collector, embedded_spaceships,
+                                       embedded_ship->index);
+
+    get_mutex(planets_mutex_id);
+    target_planet = determine_target_planetV2(collector, planets, nb_planets);
+    release_mutex(planets_mutex_id);
+
+    if (!collector.broken && target_planet.ship_id == -1) {
+
+      // move vers la planète cible
+      move_spaceship_to(collector, target_planet.x, target_planet.y,
+                        COLLECTORS_MAX_SPEED);
+    } else {
+      retour_base(collector, x_base, y_base);
+    }
+
+    osDelay(1500);
   }
 }
 
@@ -276,8 +299,14 @@ int main(void) {
       .priority = (osPriority_t)osPriorityAboveNormal,
       .stack_size = 1024,
   };
-  if ((collectorsTaskHandle = osThreadNew(
-           collectorsTask, NULL, &collectorsTask_attributes)) == NULL) {
+  if ((collector1TaskHandle = osThreadNew(
+           collectorsTask, get_embedded_spaceship(0, 8, embedded_spaceships),
+           &collectorsTask_attributes)) == NULL) {
+    puts("Erreur lors de la création de la tache des collecteurs\n");
+  }
+  if ((collector2TaskHandle = osThreadNew(
+           collectorsTask, get_embedded_spaceship(0, 9, embedded_spaceships),
+           &collectorsTask_attributes)) == NULL) {
     puts("Erreur lors de la création de la tache des collecteurs\n");
   }
   // attackers threads
@@ -323,11 +352,15 @@ int main(void) {
   // Stop all threads
   osThreadTerminate(explorer1TaskHandle);
   osThreadTerminate(explorer2TaskHandle);
-  osThreadTerminate(collectorsTaskHandle);
+  osThreadTerminate(collector1TaskHandle);
+  osThreadTerminate(collector2TaskHandle);
   osThreadTerminate(attacker1TaskHandle);
   osThreadTerminate(attacker2TaskHandle);
   osThreadTerminate(baseDefenderTaskHandle);
   osThreadTerminate(defender1TaskHandle);
   osThreadTerminate(defender2TaskHandle);
+
+  while (1)
+    ;
   return 0;
 }
